@@ -37,7 +37,6 @@
 
 - [gudumpinfo](https://github.com/MikeWuPing/gudumpinfo) —— UEFI Shell 图形化系统信息查看器：Handle/协议中心/内存/ACPI/CPUID/MSR/Event-Timer/DEPEX 等 20 类固件底层信息（X64/AArch64）
 - [gsetupmod](https://github.com/MikeWuPing/gsetupmod) —— 固件设置浏览器：解析 HII/IFR 重建 BIOS Setup，展示被固件隐藏的选项
-- [UEFI_Tools](https://github.com/MikeWuPing/UEFI_Tools) —— 本套件全部工具的**源码仓库**（含 pcDig 源码；本仓永远只有二进制）
 - [UEFI_LVGL](https://github.com/MikeWuPing/UEFI_LVGL) —— LVGL 的 UEFI 移植库（本套件各工具 GUI 的公共底座，LVGL 随库内置）
 - [guedit](https://github.com/MikeWuPing/guedit) —— UEFI Shell 下的图形化文本编辑器（LVGL）
 - [gufile](https://github.com/MikeWuPing/gufile) —— UEFI Shell 下的 GUI 文件管理器（Explorer 式界面）
@@ -74,7 +73,6 @@ Runs in the **UEFI Shell** (or a shell-free bootable ISO): 9 quick + 12 extensiv
 
 - [gudumpinfo](https://github.com/MikeWuPing/gudumpinfo) — a GUI system-info viewer for the UEFI Shell: handles, protocols center, memory, ACPI, CPUID, MSR, Event/Timer, DEPEX — 20+ firmware views (X64/AArch64)
 - [gsetupmod](https://github.com/MikeWuPing/gsetupmod) — firmware settings browser: rebuilds the BIOS Setup UI from HII/IFR and exposes hidden options
-- [UEFI_Tools](https://github.com/MikeWuPing/UEFI_Tools) — the **source repository** of every tool in this suite (pcDig source included; this repo stays binary-only)
 - [UEFI_LVGL](https://github.com/MikeWuPing/UEFI_LVGL) — the LVGL UEFI port layer (the common GUI base of this suite's tools)
 - [guedit](https://github.com/MikeWuPing/guedit) — a GUI text editor for the UEFI Shell (LVGL)
 - [gufile](https://github.com/MikeWuPing/gufile) — a GUI file manager for the UEFI Shell (Explorer-style)

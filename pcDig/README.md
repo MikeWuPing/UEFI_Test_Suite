@@ -8,7 +8,7 @@ pcDig 是一个运行在 **UEFI Shell**（或免 Shell 的可启动 ISO）下的
 
 ![pcDig 主界面——快速测试预览（左树 9 项全 PENDING、右侧测试细则、扫描条与状态栏）](docs/manual/images/01-main.png)
 
-- **版本**：0.1.0（Build 207，2026-09-05）
+- **版本**：0.1.0（Build 213，2026-09-05）
 - **作者**：Mike Wu（mikewuping@163.com）
 - **许可**：[个人用户免费；商用请联系作者](LICENSE.txt)
 - **产品手册**：[详版手册（MD）](docs/manual/pcdig-product-manual.md) ｜ [Word 版](docs/manual/pcdig-product-manual.docx)（含全部功能截图与 HP/Dell/PC-Check 功能对比表）
@@ -18,7 +18,7 @@ pcDig 是一个运行在 **UEFI Shell**（或免 Shell 的可启动 ISO）下的
 | 文件 | 说明 |
 |---|---|
 | `pcdig.efi` | 应用本体（UEFI x64 应用，约 1.1 MB） |
-| `pcDig-boot.iso` | **可启动光盘镜像**（免 UEFI Shell 直启，约 270 MB）——镜像文件较大，发布进度见根 README 公告（届时可从发布渠道获取） |
+| `pcDig-boot.iso` | **可启动光盘镜像**（免 UEFI Shell 直启的 Live-CD 风格，约 3 MB——ISO9660+UDF 桥 + 固件标准引导路径，本仓随附） |
 | `qemu_disk/` | 预构建运行盘内容（pcdig.efi + startup.nsh + expected_version.txt） |
 | `docs/manual/` | 产品手册（MD + Word + 13 张功能截图 + 报告样例） |
 | `LICENSE.txt` | 使用许可（个人免费/商用授权） |
@@ -78,11 +78,11 @@ Shell> pcdig.efi -loganalyze  # 只读挂载 NTFS/ext4 系统盘，分析上次�
 | 开机进固件菜单但没有启动项 | ISO 形态请确认为第一启动项；或在固件启动菜单中手动选择光驱/挂载项 |
 | 提示"无鼠标驱动" | 正常提示——该环境无真实指针设备，全程可用 Tab/方向键/Enter 操作 |
 | 报告点击后找不到文件 | 需要可写介质（fs0:）；无写介质时串口有 WARN 记录 |
-| 版本水印是什么 | 右下角构建号（0.1.0+207）是正式构建标识，与 `qemu_disk/expected_version.txt` 一致 |
+| 版本水印是什么 | 右下角构建号（0.1.0+213）是正式构建标识，与 `qemu_disk/expected_version.txt` 一致 |
 
 ## 更新记录
 
-- **0.1.0（Build 207，2026-09-05）**：正式发布。21 项自检、左树套件联动与实时状态、测试完成汇总弹窗、屏幕点测三点化、无鼠标适配与纯键盘全流程、姊妹工具导流（高级内存测试 advmemtest / 启动医生 BootDoctor）、可启动 ISO（免 Shell）。
+- **0.1.0（Build 213，2026-09-05）**：正式发布。21 项自检、左树套件联动与实时状态、测试完成汇总弹窗、屏幕点测三点化、无鼠标适配与纯键盘全流程、姊妹工具导流（高级内存测试 advmemtest / 启动医生 BootDoctor）、可启动 ISO（免 Shell）。
 
 ## 许可
 
@@ -98,7 +98,7 @@ A **GUI whole-machine hardware diagnostics tool for the UEFI Shell** (or a shell
 
 > Turn "does this machine boot?" into 21 pass/fail-aware checks — OK / WARN / FAIL / INFO verdicts — plus a report you can keep.
 
-- **Version**: 0.1.0 (Build 207, 2026-09-05)
+- **Version**: 0.1.0 (Build 213, 2026-09-05)
 - **Author**: Mike Wu (mikewuping@163.com)
 - **License**: [free for personal use; commercial use requires the author's authorization](LICENSE.txt)
 - **Product manual**: [Detailed manual (MD)](docs/manual/pcdig-product-manual.md) ｜ [Word](docs/manual/pcdig-product-manual.docx) (all feature screenshots + HP/Dell/PC-Check comparison)
@@ -108,7 +108,7 @@ A **GUI whole-machine hardware diagnostics tool for the UEFI Shell** (or a shell
 | File | Description |
 |---|---|
 | `pcdig.efi` | the app itself (UEFI x64, ~1.1 MB) |
-| `pcDig-boot.iso` | **bootable ISO** (shell-free boot, ~270 MB) — release status announced in the root README; obtainable from the publication channel once released |
+| `pcDig-boot.iso` | **bootable ISO** (shell-free, Live-CD style, ~3 MB — ISO9660+UDF bridge + standard firmware boot path; shipped in this repo) |
 | `qemu_disk/` | prebuilt runtime-disk contents (pcdig.efi + startup.nsh + expected_version.txt) |
 | `docs/manual/` | product manual (MD + Word + 13 screenshots + report sample) |
 | `LICENSE.txt` | usage license |
@@ -137,7 +137,7 @@ Read-only diagnostics (no NVRAM writes, no partition edits, no firmware settings
 
 ## Update log
 
-- **0.1.0 (Build 207, 2026-09-05)**: first release — 21 checks, suite-linked live tree, completion summary, 3-point screen test, no-mouse adaptation & keyboard-only flow, sister-tool links, shell-free bootable ISO.
+- **0.1.0 (Build 213, 2026-09-05)**: first release — 21 checks, suite-linked live tree, completion summary, 3-point screen test, no-mouse adaptation & keyboard-only flow, sister-tool links, shell-free bootable ISO.
 
 ## License
 

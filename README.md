@@ -20,8 +20,8 @@
 
 ![pcDig 主界面](pcDig/docs/manual/images/01-main.png)
 
-- 版本：0.1.0（Build 207，2026-09-05）｜ 作者：Mike Wu（mikewuping@163.com）
-- **下载**：`pcDig/pcdig.efi`（1.1 MB，UEFI 应用）；`pcDig-boot.iso`（270 MB，免 Shell 直启——镜像稍大，随发布公告提供）
+- 版本：0.1.0（Build 213，2026-09-05）｜ 作者：Mike Wu（mikewuping@163.com）
+- **下载**：`pcDig/pcdig.efi`（1.1 MB，UEFI 应用）；`pcDig/pcDig-boot.iso`（约 3 MB，免 Shell 直启 Live-CD——随仓提供）
 - 详见 [pcDig 说明](pcDig/README.md) ｜ [产品手册（MD/Word）](pcDig/docs/manual/pcdig-product-manual.md)
 
 ## 许可 / License
@@ -46,8 +46,8 @@ The binary release repository of UEFI hardware diagnostics, testing and repair-a
 
 Runs in the **UEFI Shell** (or a shell-free bootable ISO): 9 quick + 12 extensive = 21 checks, with scanbar magnifier animation, a live left tree (TESTING→OK/WARN/FAIL), a completion summary dialog and an HTML report; full keyboard-only workflow, automatic no-mouse hint, on-screen 3-point screen test; sister-tool cross-links (advmemtest / BootDoctor). Built on the MIT-licensed LVGL graphics library; fully simplified-Chinese UI; top-right `Author：Mike Wu`.
 
-- Version 0.1.0 (Build 207, 2026-09-05) ｜ Author: Mike Wu (mikewuping@163.com)
-- **Downloads**: `pcDig/pcdig.efi` (1.1 MB); the 270 MB shell-free `pcDig-boot.iso` will be made available with the release announcement.
+- Version 0.1.0 (Build 213, 2026-09-05) ｜ Author: Mike Wu (mikewuping@163.com)
+- **Downloads**: `pcDig/pcdig.efi` (1.1 MB) and the shell-free Live-CD `pcDig/pcDig-boot.iso` (~3 MB, in this repo).
 
 ## License
 

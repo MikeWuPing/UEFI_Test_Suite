@@ -19,7 +19,7 @@
 
 | 工具 | 当前版本 | 发布日期 | 发布 tag | 主推 |
 |---|---|---|---|---|
-| pcDig | 0.1.0（Build 213） | 2026-09-05 | [pcDig-v0.1.0](releases/tag/pcDig-v0.1.0) | pcDig 首发 —— 套件第一件 |
+| pcDig | 0.1.1（Build 213；ISO 结构修复） | 2026-09-05 | [pcDig-v0.1.1](releases/tag/pcDig-v0.1.1) | ISO 兼容性修复：内嵌 ESP 结构（Ventoy/VMware/实体机验证） |
 
 > 工具独立 tag/Release 发布（节奏自由）；本表是"套件全家福"锚点——后续工具（BootDoctor / AdvMemTest）入列后按同样方式追加行；里程碑时补套件合版（suite-vX.Y.Z）。
 
@@ -30,7 +30,7 @@
 ![pcDig 主界面](pcDig/docs/manual/images/01-main.png)
 
 - 版本：0.1.0（Build 213，2026-09-05）｜ 作者：Mike Wu（mikewuping@163.com）
-- **下载**：`pcDig/pcdig.efi`（1.1 MB，UEFI 应用）；`pcDig/pcDig-boot.iso`（约 3 MB，免 Shell 直启 Live-CD——随仓提供）
+- **下载**：`pcDig/pcdig.efi`（1.1 MB，UEFI 应用）；`pcDig/pcDig-boot-0.1.0.213+20260905_200529.iso`（约 19 MB，免 Shell 直启 Live-CD，内嵌 ESP——随仓提供）
 - 详见 [pcDig 说明](pcDig/README.md) ｜ [产品手册（MD/Word）](pcDig/docs/manual/pcdig-product-manual.md)
 
 ## 兄弟项目 / Sister Projects
@@ -43,6 +43,10 @@
 - [mount](https://github.com/MikeWuPing/mount) —— UEFI Shell 挂载工具：NTFS/ext4/ISO 卷挂载与 ISO 虚拟块设备
 
 姊妹工具（pcDig 内部导流）：**高级内存测试**（内存专项 pattern）与**启动医生 BootDoctor**（启动问题判断与修复）——加入套件后在此列出（见 pcDig 工具说明）。
+
+## 变更记录 / Changelog
+
+- **2026-09-05 · pcDig-v0.1.1**：ISO 由"UDF 桥"改为"内嵌 FAT16 ESP"双模式结构（Windows/Ubuntu 同款）——修复客户反馈的 Ventoy（实体机）/VMware UEFI "No bootfile found for UEFI!" 无法启动问题；APP 二进制不变（0.1.0 Build 213）。Ventoy 正常模式（默认项）与光驱直启均实测通过；Ventoy 的 GRUB2 模式为 Ventoy 对非标准 ISO 的已知缺陷（勿选该模式，正常模式即可）。
 
 ## 许可 / License
 
@@ -67,7 +71,7 @@ The binary release repository of UEFI hardware diagnostics, testing and repair-a
 Runs in the **UEFI Shell** (or a shell-free bootable ISO): 9 quick + 12 extensive = 21 checks, with scanbar magnifier animation, a live left tree (TESTING→OK/WARN/FAIL), a completion summary dialog and an HTML report; full keyboard-only workflow, automatic no-mouse hint, on-screen 3-point screen test; sister-tool cross-links (advmemtest / BootDoctor). Built on the MIT-licensed LVGL graphics library; fully simplified-Chinese UI; top-right `Author：Mike Wu`.
 
 - Version 0.1.0 (Build 213, 2026-09-05) ｜ Author: Mike Wu (mikewuping@163.com)
-- **Downloads**: `pcDig/pcdig.efi` (1.1 MB) and the shell-free Live-CD `pcDig/pcDig-boot.iso` (~3 MB, in this repo).
+- **Downloads**: `pcDig/pcdig.efi` (1.1 MB) and the shell-free Live-CD `pcDig/pcDig-boot-0.1.0.213+20260905_200529.iso` (~19 MB, embedded ESP, in this repo).
 
 ## Sister Projects
 
@@ -80,6 +84,10 @@ Runs in the **UEFI Shell** (or a shell-free bootable ISO): 9 quick + 12 extensiv
 
 Sister tooling (cross-linked inside pcDig): 高级内存测试 (memory-specialist patterns) and 启动医生 BootDoctor (boot diagnosis & repair) — they will be listed here once they join the suite.
 
+
+## Changelog
+
+- **2026-09-05 · pcDig-v0.1.1**: ISO switched from UDF-bridge to an embedded-FAT16-ESP dual-mode structure (Windows/Ubuntu style) — fixes the customer-reported "No bootfile found for UEFI!" failures on Ventoy (real hardware) and VMware UEFI; the app binary is unchanged (0.1.0 Build 213). Verified: ISO direct boot and Ventoy normal mode (the default). Ventoy GRUB2 mode is a known Ventoy limitation for non-standard ISOs (just use normal mode).
 
 ## License
 

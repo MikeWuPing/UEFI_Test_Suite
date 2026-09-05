@@ -19,7 +19,7 @@ pcDig 是一个运行在 **UEFI Shell**（或免 Shell 的可启动 ISO）下的
 | 文件 | 说明 |
 |---|---|
 | `binaries/pcdig.efi` | 应用本体（UEFI x64 应用，约 1.1 MB） |
-| `iso/pcDig-boot-0.1.0.213+20260905_134841.iso` | **可启动光盘镜像**（免 UEFI Shell 直启，Live-CD 风格，约 3 MB；文件名带版本号+时间戳——改版留档） |
+| `iso/pcDig-boot-0.1.0.213+20260905_200529.iso` | **可启动光盘镜像**（免 UEFI Shell 直启，Live-CD 风格，约 3 MB；文件名带版本号+时间戳——改版留档） |
 | `qemu_disk/` | 预构建运行盘内容（pcdig.efi + startup.nsh + expected_version.txt） |
 | `docs/manual/` | 产品手册（MD + Word + 15 张功能截图 + 报告样例） |
 | `LICENSE.txt` | 使用许可（个人免费/商用授权） |
@@ -227,7 +227,7 @@ A **GUI whole-machine hardware diagnostics tool for the UEFI Shell** (or a shell
 | File | Description |
 |---|---|
 | `binaries/pcdig.efi` | the app itself (UEFI x64, ~1.1 MB) |
-| `iso/pcDig-boot-0.1.0.213+20260905_134841.iso` | bootable ISO — shell-free, Live-CD style, ~3 MB (versioned filename — kept per release) |
+| `iso/pcDig-boot-0.1.0.213+20260905_200529.iso` | bootable ISO — shell-free, Live-CD style, ~19 MB (embedded FAT16 ESP — the standard Windows/Ubuntu ISO structure; boots via Ventoy/VMware/real UEFI firmware) (versioned filename — kept per release) |
 | `qemu_disk/` | prebuilt runtime-disk contents (pcdig.efi + startup.nsh + expected_version.txt) |
 | `docs/manual/` | product manual (MD + Word + 15 screenshots + report sample) |
 | `LICENSE.txt` | usage license |

@@ -6,7 +6,7 @@ pcDig 是一个运行在 **UEFI Shell**（或免 Shell 的可启动 ISO）下的
 
 > 把"机器能不能开机"拆成 21 项可判定的检查，逐项给出 OK / WARN / FAIL / INFO 结论，并生成留存报告。
 
-![pcDig 主界面——快速测试预览（左树 9 项全 PENDING、右侧测试细则、扫描条与状态栏）](docs/manual/images/01-main.png)
+![pcDig 功能演示（十一帧串烧：主界面/运行中联动/汇总弹窗/深度选择/21 项预览/键盘测试/三点屏幕测试/键盘焦点/纯键盘导航/ISO 免 Shell/无鼠标提示）](docs/manual/pcDig-功能演示.gif)
 
 - **版本**：0.1.0（Build 213，2026-09-05）
 - **发布**：[pcDig-v0.1.0 Release](https://github.com/MikeWuPing/UEFI_Test_Suite/releases/tag/pcDig-v0.1.0)
@@ -214,7 +214,7 @@ A **GUI whole-machine hardware diagnostics tool for the UEFI Shell** (or a shell
 
 > Turn "does this machine boot?" into 21 pass/fail-aware checks — OK / WARN / FAIL / INFO verdicts — plus a report you can keep.
 
-![pcDig main window — quick suite preview (9 items all PENDING left tree, detail table right, scanbar & status bar)](docs/manual/images/01-main.png)
+![pcDig feature demo (11 frames: main window / live tree / summary / deep choice / 21-item preview / keyboard test / 3-point screen test / kbd focus / arrow navigation / ISO shell-free boot / no-mouse hint)](docs/manual/pcDig-功能演示.gif)
 
 - **Version**: 0.1.0 (Build 213, 2026-09-05)
 - **Release**: [pcDig-v0.1.0](https://github.com/MikeWuPing/UEFI_Test_Suite/releases/tag/pcDig-v0.1.0)

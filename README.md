@@ -33,6 +33,18 @@
 - **下载**：`pcDig/pcdig.efi`（1.1 MB，UEFI 应用）；`pcDig/pcDig-boot.iso`（约 3 MB，免 Shell 直启 Live-CD——随仓提供）
 - 详见 [pcDig 说明](pcDig/README.md) ｜ [产品手册（MD/Word）](pcDig/docs/manual/pcdig-product-manual.md)
 
+## 兄弟项目 / Sister Projects
+
+- [gudumpinfo](https://github.com/MikeWuPing/gudumpinfo) —— UEFI Shell 图形化系统信息查看器：Handle/协议中心/内存/ACPI/CPUID/MSR/Event-Timer/DEPEX 等 20 类固件底层信息（X64/AArch64）
+- [gsetupmod](https://github.com/MikeWuPing/gsetupmod) —— 固件设置浏览器：解析 HII/IFR 重建 BIOS Setup，展示被固件隐藏的选项
+- [UEFI_Tools](https://github.com/MikeWuPing/UEFI_Tools) —— 本套件全部工具的**源码仓库**（含 pcDig 源码；本仓永远只有二进制）
+- [UEFI_LVGL](https://github.com/MikeWuPing/UEFI_LVGL) —— LVGL 的 UEFI 移植库（本套件各工具 GUI 的公共底座，LVGL 随库内置）
+- [guedit](https://github.com/MikeWuPing/guedit) —— UEFI Shell 下的图形化文本编辑器（LVGL）
+- [gufile](https://github.com/MikeWuPing/gufile) —— UEFI Shell 下的 GUI 文件管理器（Explorer 式界面）
+- [mount](https://github.com/MikeWuPing/mount) —— UEFI Shell 挂载工具：NTFS/ext4/ISO 卷挂载与 ISO 虚拟块设备
+
+姊妹工具（pcDig 内部导流）：**高级内存测试**（内存专项 pattern）与**启动医生 BootDoctor**（启动问题判断与修复）——加入套件后在此列出（见 pcDig 工具说明）。
+
 ## 许可 / License
 
 本套件各工具默认：**个人用户免费使用；商业用途（营利性部署/分发/预装）需提前联系作者书面授权**，各工具目录内 LICENSE 为准。作者联系方式：mikewuping@163.com。
@@ -57,6 +69,19 @@ Runs in the **UEFI Shell** (or a shell-free bootable ISO): 9 quick + 12 extensiv
 
 - Version 0.1.0 (Build 213, 2026-09-05) ｜ Author: Mike Wu (mikewuping@163.com)
 - **Downloads**: `pcDig/pcdig.efi` (1.1 MB) and the shell-free Live-CD `pcDig/pcDig-boot.iso` (~3 MB, in this repo).
+
+## Sister Projects
+
+- [gudumpinfo](https://github.com/MikeWuPing/gudumpinfo) — a GUI system-info viewer for the UEFI Shell: handles, protocols center, memory, ACPI, CPUID, MSR, Event/Timer, DEPEX — 20+ firmware views (X64/AArch64)
+- [gsetupmod](https://github.com/MikeWuPing/gsetupmod) — firmware settings browser: rebuilds the BIOS Setup UI from HII/IFR and exposes hidden options
+- [UEFI_Tools](https://github.com/MikeWuPing/UEFI_Tools) — the **source repository** of every tool in this suite (pcDig source included; this repo stays binary-only)
+- [UEFI_LVGL](https://github.com/MikeWuPing/UEFI_LVGL) — the LVGL UEFI port layer (the common GUI base of this suite's tools)
+- [guedit](https://github.com/MikeWuPing/guedit) — a GUI text editor for the UEFI Shell (LVGL)
+- [gufile](https://github.com/MikeWuPing/gufile) — a GUI file manager for the UEFI Shell (Explorer-style)
+- [mount](https://github.com/MikeWuPing/mount) — UEFI Shell mount tool: NTFS/ext4/ISO volume mounting
+
+Sister tooling (cross-linked inside pcDig): 高级内存测试 (memory-specialist patterns) and 启动医生 BootDoctor (boot diagnosis & repair) — they will be listed here once they join the suite.
+
 
 ## License
 

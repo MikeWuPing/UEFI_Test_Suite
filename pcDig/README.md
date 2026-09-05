@@ -23,6 +23,7 @@ pcDig 是一个运行在 **UEFI Shell**（或免 Shell 的可启动 ISO）下的
 | `qemu_disk/` | 预构建运行盘内容（pcdig.efi + startup.nsh + expected_version.txt） |
 | `docs/manual/` | 产品手册（MD + Word + 15 张功能截图 + 报告样例） |
 | `LICENSE.txt` | 使用许可（个人免费/商用授权） |
+| `pcDig-0.1.0.213+20260905.zip` | 便捷包（说明书 MD/Word + 截图 + 运行盘 + 许可——与 Release 资产同内容） |
 
 ---
 
@@ -230,6 +231,7 @@ A **GUI whole-machine hardware diagnostics tool for the UEFI Shell** (or a shell
 | `qemu_disk/` | prebuilt runtime-disk contents (pcdig.efi + startup.nsh + expected_version.txt) |
 | `docs/manual/` | product manual (MD + Word + 15 screenshots + report sample) |
 | `LICENSE.txt` | usage license |
+| `pcDig-0.1.0.213+20260905.zip` | convenience bundle (manual MD/Word + screenshots + runtime disk + license — same as the Release asset) |
 
 ## Requirements
 

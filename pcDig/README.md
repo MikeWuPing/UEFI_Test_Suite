@@ -9,6 +9,7 @@ pcDig 是一个运行在 **UEFI Shell**（或免 Shell 的可启动 ISO）下的
 ![pcDig 主界面——快速测试预览（左树 9 项全 PENDING、右侧测试细则、扫描条与状态栏）](docs/manual/images/01-main.png)
 
 - **版本**：0.1.0（Build 213，2026-09-05）
+- **发布**：[pcDig-v0.1.0 Release](https://github.com/MikeWuPing/UEFI_Test_Suite/releases/tag/pcDig-v0.1.0)
 - **作者**：Mike Wu（mikewuping@163.com）
 - **许可**：[个人用户免费；商用请联系作者](LICENSE.txt)
 - **产品手册**：[详版手册（MD）](docs/manual/pcdig-product-manual.md) ｜ [Word 版](docs/manual/pcdig-product-manual.docx) —— 含全部功能截图与 HP/Dell/PC-Check 功能对比表
@@ -17,8 +18,8 @@ pcDig 是一个运行在 **UEFI Shell**（或免 Shell 的可启动 ISO）下的
 
 | 文件 | 说明 |
 |---|---|
-| `pcdig.efi` | 应用本体（UEFI x64 应用，约 1.1 MB） |
-| `pcDig-boot.iso` | **可启动光盘镜像**（免 UEFI Shell 直启，Live-CD 风格，约 3 MB） |
+| `binaries/pcdig.efi` | 应用本体（UEFI x64 应用，约 1.1 MB） |
+| `iso/pcDig-boot-0.1.0.213+20260905_134841.iso` | **可启动光盘镜像**（免 UEFI Shell 直启，Live-CD 风格，约 3 MB；文件名带版本号+时间戳——改版留档） |
 | `qemu_disk/` | 预构建运行盘内容（pcdig.efi + startup.nsh + expected_version.txt） |
 | `docs/manual/` | 产品手册（MD + Word + 15 张功能截图 + 报告样例） |
 | `LICENSE.txt` | 使用许可（个人免费/商用授权） |
@@ -215,6 +216,7 @@ A **GUI whole-machine hardware diagnostics tool for the UEFI Shell** (or a shell
 ![pcDig main window — quick suite preview (9 items all PENDING left tree, detail table right, scanbar & status bar)](docs/manual/images/01-main.png)
 
 - **Version**: 0.1.0 (Build 213, 2026-09-05)
+- **Release**: [pcDig-v0.1.0](https://github.com/MikeWuPing/UEFI_Test_Suite/releases/tag/pcDig-v0.1.0)
 - **Author**: Mike Wu (mikewuping@163.com)
 - **License**: [free for personal use; commercial use requires the author's authorization](LICENSE.txt)
 - **Product manual**: [Detailed manual (MD)](docs/manual/pcdig-product-manual.md) ｜ [Word](docs/manual/pcdig-product-manual.docx) (all feature screenshots + HP/Dell/PC-Check comparison)
@@ -223,8 +225,8 @@ A **GUI whole-machine hardware diagnostics tool for the UEFI Shell** (or a shell
 
 | File | Description |
 |---|---|
-| `pcdig.efi` | the app itself (UEFI x64, ~1.1 MB) |
-| `pcDig-boot.iso` | bootable ISO — shell-free, Live-CD style, ~3 MB |
+| `binaries/pcdig.efi` | the app itself (UEFI x64, ~1.1 MB) |
+| `iso/pcDig-boot-0.1.0.213+20260905_134841.iso` | bootable ISO — shell-free, Live-CD style, ~3 MB (versioned filename — kept per release) |
 | `qemu_disk/` | prebuilt runtime-disk contents (pcdig.efi + startup.nsh + expected_version.txt) |
 | `docs/manual/` | product manual (MD + Word + 15 screenshots + report sample) |
 | `LICENSE.txt` | usage license |

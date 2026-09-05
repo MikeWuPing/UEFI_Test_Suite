@@ -14,6 +14,15 @@
 |---|---|---|
 | [pcDig](pcDig/) | 图形化整机硬件诊断工具（对标 Dell BIOS 内建 Diagnostics / PC-Check）：UEFI Shell 或免 Shell 可启动 ISO，21 项自检（CPU/内存 7 pattern/存储 SMART+DST/显存/网络/USB/输入设备/启动诊断/事件日志/温度电池传感器）+ 扫描条放大镜可视化 + 左树实时联动 + 汇总弹窗 + HTML 报告 | [详细说明](pcDig/README.md) ｜ [产品手册](pcDig/docs/manual/pcdig-product-manual.md) |
 
+
+## 版本对齐表 / Release Matrix
+
+| 工具 | 当前版本 | 发布日期 | 发布 tag | 主推 |
+|---|---|---|---|---|
+| pcDig | 0.1.0（Build 213） | 2026-09-05 | [pcDig-v0.1.0](releases/tag/pcDig-v0.1.0) | pcDig 首发 —— 套件第一件 |
+
+> 工具独立 tag/Release 发布（节奏自由）；本表是"套件全家福"锚点——后续工具（BootDoctor / AdvMemTest）入列后按同样方式追加行；里程碑时补套件合版（suite-vX.Y.Z）。
+
 ## pcDig — Hardware Diagnostics Toolkit
 
 运行在 **UEFI Shell**（或免 Shell 的可启动 ISO）中的图形化整机硬件诊断工具：快速 9 项 + 深度 12 项 = 21 项自检，全程扫描条放大镜动画、左树实时联动（TESTING→OK/WARN/FAIL），完成后汇总弹窗 + HTML 报告；纯键盘全流程、无鼠标自动提示、屏幕三点测试；姊妹工具导流（高级内存测试 advmemtest / 启动医生 BootDoctor）。基于 LVGL 图形库（MIT），全简体中文界面，右上角署名 `Author：Mike Wu`。

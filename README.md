@@ -13,6 +13,7 @@
 | 工具 | 说明 | 文档 |
 |---|---|---|
 | [pcDig](pcDig/) | 图形化整机硬件诊断工具（对标 Dell BIOS 内建 Diagnostics / PC-Check）：UEFI Shell 或免 Shell 可启动 ISO，21 项自检（CPU/内存 7 pattern/存储 SMART+DST/显存/网络/USB/输入设备/启动诊断/事件日志/温度电池传感器）+ 扫描条放大镜可视化 + 左树实时联动 + 汇总弹窗 + HTML 报告 | [详细说明](pcDig/README.md) ｜ [产品手册](pcDig/docs/manual/pcdig-product-manual.md) |
+| [BootDoctor](BootDoctor/) | 图形化启动诊断修复工具（bootrec + bcdboot 的图形版）：扫描所有分区找 Windows/Linux 安装，四色列出启动链问题（启动项完整性/安装注册/BCD 链/引导文件），一键修复 + 自动收敛轮（补 bootmgfw 启动项/重建 ESP/修复 BCD/删除死项/重置失败计数/顺序修复），拖拽改序 + 保存启动顺序 + 退出提醒，免责门控 + 备份先行，免 Shell 可启动 ISO（Ventoy 兼容），安装介质排除（Windows 安装 U 盘/Live CD） | [详细说明](BootDoctor/README.md) ｜ [产品手册](BootDoctor/docs/manual/bootdoctor-product-manual.md) |
 
 
 ## 版本对齐表 / Release Matrix
@@ -20,8 +21,9 @@
 | 工具 | 当前版本 | 发布日期 | 发布 tag | 主推 |
 |---|---|---|---|---|
 | pcDig | 0.1.1（Build 213；ISO 结构修复） | 2026-09-05 | [pcDig-v0.1.1](releases/tag/pcDig-v0.1.1) | ISO 兼容性修复：内嵌 ESP 结构（Ventoy/VMware/实体机验证） |
+| BootDoctor | 0.1.0（Build 384） | 2026-09-06 | [bootdoctor-v0.1.0](releases/tag/bootdoctor-v0.1.0) | 二进制发布首版：四色诊断 + 一键修复（BCD 重建/计数归零/未注册登记/死项策略）+ 拖拽改序 + 安装介质排除（真机案例） |
 
-> 工具独立 tag/Release 发布（节奏自由）；本表是"套件全家福"锚点——后续工具（BootDoctor / AdvMemTest）入列后按同样方式追加行；里程碑时补套件合版（suite-vX.Y.Z）。
+> 工具独立 tag/Release 发布（节奏自由）；本表是"套件全家福"锚点——后续工具（AdvMemTest）入列后按同样方式追加行；里程碑时补套件合版（suite-vX.Y.Z）。
 
 ## pcDig — Hardware Diagnostics Toolkit
 
@@ -30,8 +32,18 @@
 ![pcDig 主界面](pcDig/docs/manual/images/01-main.png)
 
 - 版本：0.1.0（Build 213，2026-09-05）｜ 作者：Mike Wu（mikewuping@163.com）
-- **下载**：`pcDig/pcdig.efi`（1.1 MB，UEFI 应用）；`pcDig/pcDig-boot-0.1.0.213+20260905_200529.iso`（约 19 MB，免 Shell 直启 Live-CD，内嵌 ESP——随仓提供）
+- **下载**：`pcDig/binaries/pcdig.efi`（1.1 MB，UEFI 应用）；`pcDig/iso/pcDig-boot-0.1.0.213+20260905_200529.iso`（约 19 MB，免 Shell 直启 Live-CD，内嵌 ESP——随仓提供）
 - 详见 [pcDig 说明](pcDig/README.md) ｜ [产品手册（MD/Word）](pcDig/docs/manual/pcdig-product-manual.md)
+
+## BootDoctor — Boot-diagnosis & Repair Tool
+
+运行在 **UEFI**（免 Shell 可启动 ISO 或 FAT 介质直启）中的图形化启动诊断修复工具——**bootrec + bcdboot 的图形版**：扫描所有分区找 Windows/Linux 安装，四色列出启动链问题，一键修复 + 自动收敛轮；重建 ESP / 修复 BCD（模板式重建 + 失败计数字节级定点归零）/补 bootmgfw 启动项（未注册登记）/删除死项 / 修复启动项路径，拖拽改序 + 保存确认，无鼠标 BIOS 键盘优先 + 平台提示横幅，安装介质排除（Windows 安装 U 盘实机案例），基于 LVGL 构建（UEFI 移植层 [UEFI_LVGL](https://github.com/MikeWuPing/UEFI_LVGL)）。
+
+![BootDoctor 主界面](BootDoctor/docs/manual/images/01_main_scan_done.png)
+
+- 版本：0.1.0（Build 384，2026-09-06）｜ 作者：Mike Wu（mikewuping@163.com）
+- **下载**：`BootDoctor/binaries/bootdoctor.efi`（2.3 MB，UEFI 应用）；`BootDoctor/iso/BootDoctor-boot-0.1.0.384+20260906_123223.iso`（约 19 MB，免 Shell 直启 Live-CD，内嵌 ESP，Ventoy 兼容——随仓提供）；`BootDoctor/BootDoctor-0.1.0.384+20260906.zip`（便捷包）
+- 详见 [BootDoctor 说明](BootDoctor/README.md) ｜ [产品手册（MD/Word）](BootDoctor/docs/manual/bootdoctor-product-manual.md)
 
 ## 兄弟项目 / Sister Projects
 
@@ -42,10 +54,11 @@
 - [gufile](https://github.com/MikeWuPing/gufile) —— UEFI Shell 下的 GUI 文件管理器（Explorer 式界面）
 - [mount](https://github.com/MikeWuPing/mount) —— UEFI Shell 挂载工具：NTFS/ext4/ISO 卷挂载与 ISO 虚拟块设备
 
-姊妹工具（pcDig 内部导流）：**高级内存测试**（内存专项 pattern）与**启动医生 BootDoctor**（启动问题判断与修复）——加入套件后在此列出（见 pcDig 工具说明）。
+姊妹工具（pcDig 内部导流）：**高级内存测试**（内存专项 pattern）——加入套件后在此列出（见 pcDig 工具说明）。**启动医生 BootDoctor** 已入列（见上方 BootDoctor 节）。
 
 ## 变更记录 / Changelog
 
+- **2026-09-06 · bootdoctor-v0.1.0**：BootDoctor 二进制发布首版（0.1.0 Build 384）——四色诊断（启动项完整性/安装注册/BCD 链/引导文件）+ 一键修复自动收敛轮（补 bootmgfw 启动项/重建 ESP/BCD 模板式重建 + 失败计数定点归零/删除死项/修复启动项路径）+ 拖拽改序 + 保存启动顺序 + 退出提醒 + 免责门控 + 安装介质排除（Windows 安装 U 盘/Live CD 真机案例）+ Ventoy 兼容双保险 ISO。
 - **2026-09-05 · pcDig-v0.1.1**：ISO 由"UDF 桥"改为"内嵌 FAT16 ESP"双模式结构（Windows/Ubuntu 同款）——修复客户反馈的 Ventoy（实体机）/VMware UEFI "No bootfile found for UEFI!" 无法启动问题；APP 二进制不变（0.1.0 Build 213）。Ventoy 正常模式（默认项）与光驱直启均实测通过；Ventoy 的 GRUB2 模式为 Ventoy 对非标准 ISO 的已知缺陷（勿选该模式，正常模式即可）。
 
 ## 许可 / License
@@ -65,13 +78,23 @@ The binary release repository of UEFI hardware diagnostics, testing and repair-a
 | Tool | Description | Docs |
 |---|---|---|
 | [pcDig](pcDig/) | A GUI whole-machine hardware diagnostics toolkit (Dell built-in Diagnostics / PC-Check style): UEFI Shell or a shell-free bootable ISO — 21 self-tests (CPU, 7 memory patterns, SMART+DST storage, VRAM, network, USB, input, boot diagnostics, event log, temperature & battery), scanbar magnifier visualization, real-time left tree, completion summary dialog, HTML report | [README](pcDig/README.md) ｜ [Product manual](pcDig/docs/manual/pcdig-product-manual.md) |
+| [BootDoctor](BootDoctor/) | A GUI boot-diagnosis & repair tool (the graphical counterpart of `bootrec + bcdboot`): scans partitions for Windows/Linux installations, four-color boot-chain findings (boot-item integrity / installation registration / BCD chain / boot files), one-click repair with automatic convergence rounds (register bootmgfw entry / rebuild ESP / rebuild BCD / delete dead entries / reset failure counters / fix paths), drag-reorder + save-order + exit prompt, disclaimer gate + backup-first, shell-free bootable ISO (Ventoy-compatible), install-media exclusion (Windows setup U-disk / Live CD) | [README](BootDoctor/README.md) ｜ [Product manual](BootDoctor/docs/manual/bootdoctor-product-manual.md) |
 
 ## pcDig — Hardware Diagnostics Toolkit
 
 Runs in the **UEFI Shell** (or a shell-free bootable ISO): 9 quick + 12 extensive = 21 checks, with scanbar magnifier animation, a live left tree (TESTING→OK/WARN/FAIL), a completion summary dialog and an HTML report; full keyboard-only workflow, automatic no-mouse hint, on-screen 3-point screen test; sister-tool cross-links (advmemtest / BootDoctor). Built on the MIT-licensed LVGL graphics library; fully simplified-Chinese UI; top-right `Author：Mike Wu`.
 
 - Version 0.1.0 (Build 213, 2026-09-05) ｜ Author: Mike Wu (mikewuping@163.com)
-- **Downloads**: `pcDig/pcdig.efi` (1.1 MB) and the shell-free Live-CD `pcDig/pcDig-boot-0.1.0.213+20260905_200529.iso` (~19 MB, embedded ESP, in this repo).
+- **Downloads**: `pcDig/binaries/pcdig.efi` (1.1 MB) and the shell-free Live-CD `pcDig/iso/pcDig-boot-0.1.0.213+20260905_200529.iso` (~19 MB, embedded ESP, in this repo).
+
+## BootDoctor — Boot-diagnosis & Repair Tool
+
+Runs on **UEFI** (a shell-free bootable ISO or a FAT medium): it scans every partition for Windows/Linux installations, classifies the boot chain in four colors, and offers one-click repair with automatic convergence — rebuild ESP, rebuild BCD (template-based), reset BCD failure counters (byte-level zeroing), register unregistered installations, delete dead entries, fix boot-item paths; drag reorder + save order + exit prompt; no-mouse BIOS keyboard-first + platform hint banner; install-media exclusion (real-machine Windows setup U-disk case). Built on the MIT-licensed LVGL graphics library (UEFI port layer [UEFI_LVGL](https://github.com/MikeWuPing/UEFI_LVGL)); fully simplified-Chinese UI.
+
+![BootDoctor main UI](BootDoctor/docs/manual/images/01_main_scan_done.png)
+
+- Version 0.1.0 (Build 384, 2026-09-06) ｜ Author: Mike Wu (mikewuping@163.com)
+- **Downloads**: `BootDoctor/binaries/bootdoctor.efi` (2.3 MB); the shell-free Live-CD `BootDoctor/iso/BootDoctor-boot-0.1.0.384+20260906_123223.iso` (~19 MB, embedded ESP, Ventoy-compatible); the convenience bundle `BootDoctor/BootDoctor-0.1.0.384+20260906.zip`.
 
 ## Sister Projects
 
@@ -82,11 +105,12 @@ Runs in the **UEFI Shell** (or a shell-free bootable ISO): 9 quick + 12 extensiv
 - [gufile](https://github.com/MikeWuPing/gufile) — a GUI file manager for the UEFI Shell (Explorer-style)
 - [mount](https://github.com/MikeWuPing/mount) — UEFI Shell mount tool: NTFS/ext4/ISO volume mounting
 
-Sister tooling (cross-linked inside pcDig): 高级内存测试 (memory-specialist patterns) and 启动医生 BootDoctor (boot diagnosis & repair) — they will be listed here once they join the suite.
+Sister tooling (cross-linked inside pcDig): 高级内存测试 (memory-specialist patterns) — will be listed here once it joins the suite. 启动医生 BootDoctor has joined (see its section above).
 
 
 ## Changelog
 
+- **2026-09-06 · bootdoctor-v0.1.0**: BootDoctor first binary release (0.1.0 Build 384) — four-color diagnosis, one-click repair with convergence rounds (register bootmgfw / rebuild ESP / template BCD rebuild + failure-counter zeroing / delete dead / fix paths), drag reorder + save order + exit prompt, disclaimer gate, install-media exclusion (real-machine Windows setup U-disk / Live CD), Ventoy-compatible dual-path ISO.
 - **2026-09-05 · pcDig-v0.1.1**: ISO switched from UDF-bridge to an embedded-FAT16-ESP dual-mode structure (Windows/Ubuntu style) — fixes the customer-reported "No bootfile found for UEFI!" failures on Ventoy (real hardware) and VMware UEFI; the app binary is unchanged (0.1.0 Build 213). Verified: ISO direct boot and Ventoy normal mode (the default). Ventoy GRUB2 mode is a known Ventoy limitation for non-standard ISOs (just use normal mode).
 
 ## License

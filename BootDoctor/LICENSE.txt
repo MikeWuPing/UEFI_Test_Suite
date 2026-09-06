@@ -1,0 +1,63 @@
+BootDoctor 启动诊断修复工具 —— 使用许可 / License
+==================================================
+
+个人用户免费使用（Free for personal use）
+  个人用户在自有设备上的诊断、维修、装机自我排查等非营利用途，免费使用本
+  工具及其二进制产物（bootdoctor.efi / BootDoctor-boot.iso / qemu_disk 等），
+  无需授权、无需付费。
+
+商业用途请联系作者授权（Commercial use requires authorization）
+  下列情形属于商业用途，需先联系作者获取书面授权：
+    - 在经营、销售、交付等营利性场景中部署或使用本工具；
+    - 对外分发、预装（如随整机/服务交付）、再分发本工具或其衍生形态；
+    - 任何形式的收费服务（含远程/上门维修收费、售卖工具书/教程等间接营利）。
+  联系邮箱：mikewuping@163.com
+
+禁止事项（Prohibited）
+    - 不允许反编译、反汇编或以其他方式还原本二进制产物源码；
+    - 不允许移除或遮挡本工具内作者署名、版本水印；
+    - 不允许将本工具及其二进制产物用于任何违反所在地法律的活动。
+
+免责声明（Disclaimer）
+  本软件开放免费试用，因此不对修改后无法启动和磁盘数据丢失负责，请谨慎
+  使用，并在使用前，做好数据备份。
+
+第三方组件许可（Third-party licenses）
+    - 图形库 LVGL（https://lvgl.io，MIT License，作者 Gabor Kiss-Vamosi 等）；
+      UEFI 移植层 MikeWuPing/UEFI_LVGL（GPL 兼容声明见该仓库）。
+    本产品随机器内置的字库（SimSun 简体中文子集）仅用于本工具界面显示，
+    不随本许可转移任何嵌入字体之外的第三方权利。
+
+--------------------------------------------------------------
+
+ENGLISH
+
+BootDoctor Boot-diagnosis & Repair Tool — License
+
+Free for personal use:
+    Individuals may use the binaries (bootdoctor.efi / BootDoctor-boot.iso /
+    qemu_disk) free of charge for non-profit purposes on their own machines
+    (self-diagnostics, personal repair, inspection).
+
+Commercial use requires written authorization from the author:
+    Any profit-oriented deployment or redistribution (bundling with
+    delivered hardware or services, customer-paid repair, resale, paid
+    training material that embeds or references the tool, etc.) must obtain
+    authorization first.
+    Contact: mikewuping@163.com
+
+Prohibited:
+    - No reverse engineering (decompiling/disassembling or otherwise
+      recovering source) of the binaries.
+    - The author attribution and version watermark in the UI must not be
+      removed or obscured.
+    - No use in violation of applicable law.
+
+Disclaimer:
+    The software is offered free for trial; the author is therefore not
+    responsible for system failure or data loss after modifications.
+    Use with caution and back up your data first.
+
+Third-party licenses:
+    - LVGL graphics library (https://lvgl.io, MIT License).
+    - UEFI port layer: MikeWuPing/UEFI_LVGL (see its repo for its terms).

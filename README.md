@@ -15,6 +15,7 @@
 | [pcDig](pcDig/) | 图形化整机硬件诊断工具（对标 Dell BIOS 内建 Diagnostics / PC-Check）：UEFI Shell 或免 Shell 可启动 ISO，21 项自检（CPU/内存 7 pattern/存储 SMART+DST/显存/网络/USB/输入设备/启动诊断/事件日志/温度电池传感器）+ 扫描条放大镜可视化 + 左树实时联动 + 汇总弹窗 + HTML 报告 | [详细说明](pcDig/README.md) ｜ [产品手册](pcDig/docs/manual/pcdig-product-manual.md) |
 | [BootDoctor](BootDoctor/) | 图形化启动诊断修复工具（bootrec + bcdboot 的图形版）：扫描所有分区找 Windows/Linux 安装，四色列出启动链问题（启动项完整性/安装注册/BCD 链/引导文件），一键修复 + 自动收敛轮（补 bootmgfw 启动项/重建 ESP/修复 BCD/删除死项/重置失败计数/顺序修复），拖拽改序 + 保存启动顺序 + 退出提醒，免责门控 + 备份先行，免 Shell 可启动 ISO（Ventoy 兼容），安装介质排除（Windows 安装 U 盘/Live CD） | [详细说明](BootDoctor/README.md) ｜ [产品手册](BootDoctor/docs/manual/bootdoctor-product-manual.md) |
 | [AdvMemTest](AdvMemTest/) | 图形化内存压力测试工具（对标 Memtest86 系）：经典测试集 11 条用户可见 pattern 免授权可执行（专业版 31 条全量，含 18 条高级 pattern）+ 四线程模式（多线程地址切分并发；核数上限免费版 16 / 专业版 512）+ 自我重定位 + 动态 DIMM 可视化带（SMBIOS 双入口、最大 48 槽、空槽置灰、双路分组头）+ 错误三通道（地址级）+ HTML 报告自动落盘；免 Shell 可启动 ISO；专业版附加颗粒级错误定位（五级坐标）、SPD 深度内存信息页、内存带宽基准、禁用缓存、坏块清单导出 | [详细说明](AdvMemTest/README.md) ｜ [免费版手册](AdvMemTest/docs/manual/advmemtest-free-user-guide.md) ｜ [快速上手](AdvMemTest/docs/manual/advmemtest-quick-guide.md) |
+| [UefiEraser](UefiEraser/) | 图形化磁盘数据粉碎工具：在操作系统启动之前对**整块物理磁盘**、**单个分区**或**分区的空闲空间**做不可恢复的多遍覆写——12 种行业标准算法（DoD 5220.22-M / ECE、Gutmann 35、Schneier、HMG IS5、RCMP TSSIT OPS-II、VSITR、GOST P50739-95、AR 380-19、USAF 5020、自定义 N 遍）+ 末遍回读校验 + 安全闸门（只读与启动卷不可选 / 摘要确认 / 键入 ERASE / 整盘再键入容量）+ 文本报告 + CSV 审计日志 + 擦后按介质重扫（幽灵分区自动剔除）；全键盘可达，界面内建中文；Free 版 MIT 开源，设备级擦除（ATA Secure Erase / NVMe Format NVM / NVMe Sanitize）与 18 种扩展算法属商业版 Pro | [详细说明](UefiEraser/README.md) ｜ [产品手册](UefiEraser/docs/manual/UefiEraser-产品手册.md) |
 
 
 ## 版本对齐表 / Release Matrix
@@ -24,6 +25,7 @@
 | pcDig | 0.1.1（Build 213；ISO 结构修复） | 2026-09-05 | [pcDig-v0.1.1](releases/tag/pcDig-v0.1.1) | ISO 兼容性修复：内嵌 ESP 结构（Ventoy/VMware/实体机验证） |
 | BootDoctor | 0.1.0（Build 384） | 2026-09-06 | [bootdoctor-v0.1.0](releases/tag/bootdoctor-v0.1.0) | 二进制发布首版：四色诊断 + 一键修复（BCD 重建/计数归零/未注册登记/死项策略）+ 拖拽改序 + 安装介质排除（真机案例） |
 | AdvMemTest | 0.1.7（Build 401；免费版 11 条用户可见 / 专业版 31 条全量） | 2026-09-15 | [AdvMemTest-v0.1.7](releases/tag/AdvMemTest-v0.1.7) | 二进制发布首版：免费版经典测试集（个人免费）+ 免 Shell 可启动 ISO + 动态 DIMM 可视化带 + 错误三通道 + HTML 报告；专业版同版本经商务渠道交付——18 条高级 pattern + 颗粒级错误定位 + SPD 深度页 + 带宽基准 + 禁用缓存 + 512 核 |
+| UefiEraser | 0.1.0（Build 90） | 2026-09-19 | [UefiEraser-v0.1.0.90](https://github.com/MikeWuPing/UefiEraser/releases/tag/v0.1.0.90) | 首版入列：整盘 / 分区 / 空闲空间粉碎 + 12 种行业标准算法 + 末遍回读校验 + 安全闸门 + 报告与 CSV 审计日志；本版修掉「运行约 5 分钟后被固件看门狗复位」——0.1.0.89 及更早都有，会打断长时间擦除。Free 版 MIT 开源（设备级擦除与 18 种扩展算法属商业版 Pro），源码与 Releases 在独立仓库 [UefiEraser](https://github.com/MikeWuPing/UefiEraser) |
 
 > 工具独立 tag/Release 发布（节奏自由）；本表是"套件全家福"锚点，后续工具按同样方式追加行；里程碑时补套件合版（suite-vX.Y.Z）。
 
@@ -59,6 +61,25 @@
 - **下载**：`AdvMemTest/binaries/advmemtest-free.efi`（约 1.4 MB，UEFI 应用——免费版，个人用户免费使用）；`AdvMemTest/iso/AdvMemTest-boot-0.1.7.401+20260915_174937.iso`（约 18 MB，免 Shell 直启 Live-CD，El Torito + 内嵌 ESP——随仓提供）；`AdvMemTest/AdvMemTest-0.1.7.401+20260915_174937.zip`（便捷包）；专业版经商务渠道交付（`AdvMemTestPro.efi` + `ADVMTEST.LIC`），不随本仓发布
 - 详见 [AdvMemTest 说明](AdvMemTest/README.md) ｜ [免费版手册（MD/Word）](AdvMemTest/docs/manual/advmemtest-free-user-guide.md) ｜ [快速上手（MD/Word）](AdvMemTest/docs/manual/advmemtest-quick-guide.md)
 
+## UefiEraser — 磁盘数据粉碎工具
+
+运行在 **UEFI Shell**（操作系统启动之前）中的图形化磁盘数据粉碎工具：把整块物理磁盘、单个分区、
+或分区的空闲空间用 12 种行业标准算法多遍覆写彻底抹掉，擦完自动落报告与 CSV 审计日志。
+`格式化不等于销毁`（快速格式化只改元数据）、`系统盘擦不掉自己`（操作系统正在用它）、
+`SSD 多遍覆写不可靠`（FTL 会把写入重映射到别的物理块）——这三件事在系统之外一次解决。
+安全闸门让手滑无害：只读设备与当前启动卷不可选，随后依次是摘要确认、键入 `ERASE`、
+整盘再键入容量合计，任何一步 Esc 即中止、不写一个字节；擦完按介质重扫（重读 LBA 0），
+盘上已不存在的分区行整行剔除。全键盘可达（Tab 焦点环 / F2 导出 / Del 清空）。
+基于 LVGL 图形库（MIT），全简体中文界面，工具栏带 Free 版徽标，菜单栏署名 `Author：Mike Wu`。
+
+![UefiEraser 主界面](UefiEraser/docs/manual/images/01-main.png)
+
+- 版本：0.1.0（Build 90，2026-09-19）｜ 作者：Mike Wu（mikewuping@163.com）
+- **下载**：`UefiEraser/binaries/uefieraser-free.efi`（约 1.0 MB，UEFI 应用，Free 版，随本仓提供）；
+  源码与 Releases 在独立仓库 **[github.com/MikeWuPing/UefiEraser](https://github.com/MikeWuPing/UefiEraser)**
+  （Free 版 MIT 开源；设备级擦除与 18 种扩展算法属商业版 Pro，Free 版里灰显加锁）
+- 详见 [UefiEraser 说明](UefiEraser/README.md) ｜ [产品手册（MD/Word）](UefiEraser/docs/manual/UefiEraser-产品手册.md) ｜ [使用手册](UefiEraser/docs/manual/README.md)
+
 ## 兄弟项目 / Sister Projects
 
 - [gudumpinfo](https://github.com/MikeWuPing/gudumpinfo) —— UEFI Shell 图形化系统信息查看器：Handle/协议中心/内存/ACPI/CPUID/MSR/Event-Timer/DEPEX 等 20 类固件底层信息（X64/AArch64）
@@ -72,6 +93,7 @@
 
 ## 变更记录 / Changelog
 
+- **2026-09-19 · UefiEraser 0.1.0（Build 90）**：UefiEraser 入列套件（二进制 + 产品手册 + 使用手册 + 29 张截图）——整盘 / 分区 / 空闲空间多遍覆写 + 12 种行业标准算法 + 末遍回读校验 + 安全闸门 + 文本报告 + CSV 审计日志 + 擦后按介质重扫；键盘全程可达。本版修掉「启动约 5 分钟后被固件看门狗整机复位」——该缺陷存在于 0.1.0.89 及更早的所有版本，长时间擦除会被中途打断。Free 版 MIT 开源；设备级擦除与 18 种扩展算法属商业版 Pro。源码与 Releases 见 [UefiEraser 仓库](https://github.com/MikeWuPing/UefiEraser)。
 - **2026-09-15 · AdvMemTest-v0.1.7**：AdvMemTest 二进制发布首版（0.1.7 Build 401）——免费版经典测试集 11 条用户可见 pattern（地址类 / memtest86+ 系 / 引擎自检参考条）+ 四线程模式（多核上限 16 核）+ 自我重定位 + 动态 DIMM 可视化带（SMBIOS 双入口、最大 48 槽、空槽置灰、双路分组头）+ 错误三通道（地址级）+ HTML 报告 + 设置持久化；首发即带免 Shell 可启动 ISO（El Torito + 内嵌 ESP）。专业版同版本经商务渠道交付（+18 条高级 pattern、颗粒级错误定位、SPD 深度内存信息页、内存带宽基准、禁用缓存模式、坏块清单导出、512 核扩展——商业用途需授权）。
 - **2026-09-06 · bootdoctor-v0.1.0**：BootDoctor 二进制发布首版（0.1.0 Build 384）——四色诊断（启动项完整性/安装注册/BCD 链/引导文件）+ 一键修复自动收敛轮（补 bootmgfw 启动项/重建 ESP/BCD 模板式重建 + 失败计数定点归零/删除死项/修复启动项路径）+ 拖拽改序 + 保存启动顺序 + 退出提醒 + 免责门控 + 安装介质排除（Windows 安装 U 盘/Live CD 真机案例）+ Ventoy 兼容双保险 ISO。
 - **2026-09-05 · pcDig-v0.1.1**：ISO 由"UDF 桥"改为"内嵌 FAT16 ESP"双模式结构（Windows/Ubuntu 同款）——修复客户反馈的 Ventoy（实体机）/VMware UEFI "No bootfile found for UEFI!" 无法启动问题；APP 二进制不变（0.1.0 Build 213）。Ventoy 正常模式（默认项）与光驱直启均实测通过；Ventoy 的 GRUB2 模式为 Ventoy 对非标准 ISO 的已知缺陷（勿选该模式，正常模式即可）。
@@ -94,6 +116,7 @@ The binary release repository of UEFI hardware diagnostics, testing and repair-a
 |---|---|---|
 | [pcDig](pcDig/) | A GUI whole-machine hardware diagnostics toolkit (Dell built-in Diagnostics / PC-Check style): UEFI Shell or a shell-free bootable ISO — 21 self-tests (CPU, 7 memory patterns, SMART+DST storage, VRAM, network, USB, input, boot diagnostics, event log, temperature & battery), scanbar magnifier visualization, real-time left tree, completion summary dialog, HTML report | [README](pcDig/README.md) ｜ [Product manual](pcDig/docs/manual/pcdig-product-manual.md) |
 | [BootDoctor](BootDoctor/) | A GUI boot-diagnosis & repair tool (the graphical counterpart of `bootrec + bcdboot`): scans partitions for Windows/Linux installations, four-color boot-chain findings (boot-item integrity / installation registration / BCD chain / boot files), one-click repair with automatic convergence rounds (register bootmgfw entry / rebuild ESP / rebuild BCD / delete dead entries / reset failure counters / fix paths), drag-reorder + save-order + exit prompt, disclaimer gate + backup-first, shell-free bootable ISO (Ventoy-compatible), install-media exclusion (Windows setup U-disk / Live CD) | [README](BootDoctor/README.md) ｜ [Product manual](BootDoctor/docs/manual/bootdoctor-product-manual.md) |
+| [UefiEraser](UefiEraser/) | A GUI disk-data shredder: before any operating system boots, overwrite a whole physical disk, a single partition or a volume's free space irreversibly — 12 industry-standard algorithms (DoD 5220.22-M / ECE, Gutmann 35, Schneier, HMG IS5, RCMP TSSIT OPS-II, VSITR, GOST P50739-95, AR 380-19, USAF 5020, custom N passes), optional last-pass read-back verification, safety gates (read-only devices and the boot volume cannot be selected; summary confirmation; a typed ERASE; the capacity total for whole disks), text report and CSV audit log, and a post-erase re-scan that drops partitions the medium no longer has. Full keyboard workflow, Chinese UI. The Free edition is MIT open source; device-level erase (ATA Secure Erase / NVMe Format NVM / NVMe Sanitize) and 18 further algorithms belong to the commercial Pro edition | [README](UefiEraser/README.md) ｜ [Product manual](UefiEraser/docs/manual/UefiEraser-产品手册.md) |
 
 ## pcDig — Hardware Diagnostics Toolkit
 
@@ -121,6 +144,29 @@ A GUI memory stress-test tool for the **UEFI Shell** (or a shell-free bootable I
 - **Downloads**: `AdvMemTest/binaries/advmemtest-free.efi` (~1.4 MB UEFI application — Free edition, free for personal use); `AdvMemTest/iso/AdvMemTest-boot-0.1.7.401+20260915_174937.iso` (~18 MB shell-free Live-CD, El Torito + embedded ESP, in this repo); the convenience bundle `AdvMemTest/AdvMemTest-0.1.7.401+20260915_174937.zip`; the Pro edition ships through the business channel only (`AdvMemTestPro.efi` + `ADVMTEST.LIC`) and is not published here
 - See the [AdvMemTest README](AdvMemTest/README.md) ｜ [Free manual (MD/Word)](AdvMemTest/docs/manual/advmemtest-free-user-guide.md) ｜ [Quick start](AdvMemTest/docs/manual/advmemtest-quick-guide.md)
 
+## UefiEraser — Disk Data Shredder
+
+A GUI data shredder for the **UEFI Shell**, before any operating system boots: overwrite a whole
+physical disk, a single partition, or a volume's free space with 12 industry-standard multi-pass
+algorithms, then export a report and a CSV audit log. It answers three things at once — a quick
+format only rewrites metadata, an operating system cannot shred the disk it is running from, and
+multi-pass overwriting is unreliable on SSDs (the FTL remaps writes elsewhere). Safety gates make
+a stray click harmless: read-only devices and the boot volume cannot be selected, then a summary
+confirmation, a typed `ERASE`, and the capacity total for whole disks; Esc at any point aborts
+without writing a byte. After erasing it re-scans the medium (re-reading LBA 0) and drops
+partitions that no longer exist. Full keyboard workflow (Tab focus ring, F2 export, Del clear).
+Built on the MIT-licensed LVGL graphics library; simplified-Chinese UI.
+
+![UefiEraser main UI](UefiEraser/docs/manual/images/01-main.png)
+
+- Version 0.1.0 (Build 90, 2026-09-19) ｜ Author: Mike Wu (mikewuping@163.com)
+- **Downloads**: `UefiEraser/binaries/uefieraser-free.efi` (~1.0 MB UEFI application, Free edition,
+  in this repo); source and releases live in the separate repository
+  **[github.com/MikeWuPing/UefiEraser](https://github.com/MikeWuPing/UefiEraser)** (the Free edition
+  is MIT open source; device-level erase and 18 further algorithms belong to the commercial Pro
+  edition and appear greyed out and locked in the Free build)
+- See the [UefiEraser README](UefiEraser/README.md) ｜ [product manual (MD/Word)](UefiEraser/docs/manual/UefiEraser-产品手册.md) ｜ [usage guide](UefiEraser/docs/manual/README.md)
+
 ## Sister Projects
 
 - [gudumpinfo](https://github.com/MikeWuPing/gudumpinfo) — a GUI system-info viewer for the UEFI Shell: handles, protocols center, memory, ACPI, CPUID, MSR, Event/Timer, DEPEX — 20+ firmware views (X64/AArch64)
@@ -135,6 +181,7 @@ Sister tooling (cross-linked inside pcDig): the memory specialist tool **AdvMemT
 
 ## Changelog
 
+- **2026-09-19 · UefiEraser 0.1.0 (Build 90)**: UefiEraser joins the suite (binary, product manual, usage guide, 29 screenshots) — whole-disk / partition / free-space multi-pass overwriting, 12 industry-standard algorithms, optional last-pass read-back verification, safety gates, text reports, a CSV audit log and a post-erase re-scan of the medium; the whole workflow is keyboard-reachable. This build fixes the firmware boot watchdog resetting the machine after roughly five minutes - a defect present in every build up to 0.1.0.89, which cut long erases short. The Free edition is MIT open source; device-level erase and 18 further algorithms belong to the commercial Pro edition. Source and releases: [UefiEraser](https://github.com/MikeWuPing/UefiEraser).
 - **2026-09-15 · AdvMemTest-v0.1.7**: AdvMemTest first binary release (0.1.7 Build 401) — 11 user-visible classical patterns in the Free edition (address family / memtest86+ family / engine self-check reference), four multi-core modes (16-core cap in the Free edition), self-relocation, a dynamic DIMM strip (SMBIOS dual-entry, up to 48 slots, greyed empties, group headers), three error channels (address-level), HTML reports and settings persistence; the first release already ships a shell-free bootable ISO (El Torito + embedded ESP). The Pro edition ships through the business channel with the same version (+18 advanced patterns, chip-level error location, SPD deep memory-info page, bandwidth benchmark, cache-bypass mode, bad-block export, 512-core scaling — commercial use requires a license).
 - **2026-09-06 · bootdoctor-v0.1.0**: BootDoctor first binary release (0.1.0 Build 384) — four-color diagnosis, one-click repair with convergence rounds (register bootmgfw / rebuild ESP / template BCD rebuild + failure-counter zeroing / delete dead / fix paths), drag reorder + save order + exit prompt, disclaimer gate, install-media exclusion (real-machine Windows setup U-disk / Live CD), Ventoy-compatible dual-path ISO.
 - **2026-09-05 · pcDig-v0.1.1**: ISO switched from UDF-bridge to an embedded-FAT16-ESP dual-mode structure (Windows/Ubuntu style) — fixes the customer-reported "No bootfile found for UEFI!" failures on Ventoy (real hardware) and VMware UEFI; the app binary is unchanged (0.1.0 Build 213). Verified: ISO direct boot and Ventoy normal mode (the default). Ventoy GRUB2 mode is a known Ventoy limitation for non-standard ISOs (just use normal mode).

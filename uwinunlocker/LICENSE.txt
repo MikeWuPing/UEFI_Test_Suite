@@ -1,0 +1,69 @@
+UwinUnlocker 授权条款
+=====================
+
+版权所有 (c) 2026 Mike Wu。保留所有权利。
+
+本产品**仅授权个人用户免费试用**。
+**商业使用（包括但不限于：随硬件或服务一同分发、作为收费服务的一部分提供、
+在商业环境中部署使用、以本产品为基础提供有偿技术支持）必须事先联系作者取得书面授权。**
+
+联系方式：mikewuping@163.com
+
+---
+
+## 一、你被允许做的事（个人用户）
+
+- 在**你自己拥有或有权处置的设备**上，为本人的密码恢复目的运行本工具；
+- 复制并分发本产品的**完整原始副本**，前提是本文件随副本一同提供、且不作任何修改；
+- 为个人学习或研究目的阅读本产品的源代码。
+
+## 二、你没有得到授权的事
+
+- 任何形式的**商业使用**（见上）——需要事先取得作者的书面授权；
+- 对本产品进行**修改后再分发**（无论是否收费）；
+- **移除或更改**本文件、作者署名、或产品界面上的作者信息；
+- 将本产品**作为自己的作品**发布或声称拥有其著作权；
+- 在**未取得所有者授权**的设备上使用本产品。
+
+## 三、使用本产品的责任
+
+本工具会**修改磁盘上的账户数据**，而且**这是不可逆的操作**——被清除的密码不会因为撤销操作而恢复。
+
+**使用前请自行备份。** 本产品按"现状"提供，不附带任何明示或暗示的担保，包括但不限于对
+适销性、特定用途适用性及不侵权的担保。**在任何情况下，作者均不对因使用或无法使用本产品
+而产生的任何索赔、损害或其他责任负责**，无论是在合同诉讼、侵权行为还是其他方面。
+
+## 四、第三方组件
+
+本产品**在运行时加载**一个独立的 NTFS 读写驱动，该驱动来自
+[`pbatard/ntfs-3g`](https://github.com/pbatard/ntfs-3g)（`tuxera/ntfs-3g` 的 fork），
+以 **GPL-2.0-or-later** 授权，其完整源码随本产品一同提供（见 `NtfsRwPkg/upstream/`，
+以及我们相对上游的全部改动清单 `NtfsRwPkg/upstream.deltas`）。
+
+该驱动是**运行时装载的独立可执行模块，与本产品不链接**，因此两者分别适用各自的许可证：
+本文件所述的条款适用于 UwinUnlocker 应用本体，不改变该驱动本身的 GPL 条款。
+
+界面所使用的图形库为 LVGL 的 UEFI 移植（`LvglPkg/`），其许可证见该目录下的 `LICENSE`。
+
+---
+
+## English summary (not a substitute for the Chinese text above)
+
+Copyright (c) 2026 Mike Wu. All rights reserved.
+
+**Free for personal use only.** Any commercial use — including distribution with
+hardware or services, use as part of a paid offering, deployment in a commercial
+environment, or paid support based on this product — **requires prior written
+permission from the author** (mikewuping@163.com).
+
+Redistribution of modified versions, removal of this notice or of the author
+attribution in the product's own interface, and use on devices you are not
+authorised to access are not permitted.
+
+**This tool modifies account data on disk, irreversibly. Back up first.** It is
+provided "as is", without warranty of any kind, and the author accepts no
+liability for any damages arising from its use.
+
+The NTFS driver it loads at runtime is GPL-2.0-or-later and is distributed as an
+independent, non-linked module; its complete source ships with this product and
+its own licence is unaffected by the terms above.

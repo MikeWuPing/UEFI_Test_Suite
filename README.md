@@ -29,7 +29,7 @@
 | AdvMemTest | 0.1.7（Build 562；免费版 13 条用户可见 / 专业版 31 条目录） | 2026-09-20 | [AdvMemTest-v0.1.7.562](releases/tag/AdvMemTest-v0.1.7.562) | 增量版：注册表 → 33 条（+SIMD-128/256 宽访存）、带宽基准 → 工作集扫描曲线（四线 + L1/L2/L3 缓存台阶标注）、内存温度与 ECC（健康卡 / 内存信息页明细 / 报告段）、底部平台信息条与计时、DeviceLocator 长名的槽序修正、内部加固（新栈 8KB→64KB） |
 | UefiEraser | 0.1.0（Build 90） | 2026-09-19 | [UefiEraser-v0.1.0.90](https://github.com/MikeWuPing/UefiEraser/releases/tag/v0.1.0.90) | 首版入列：整盘 / 分区 / 空闲空间粉碎 + 12 种行业标准算法 + 末遍回读校验 + 安全闸门 + 报告与 CSV 审计日志；本版修掉「运行约 5 分钟后被固件看门狗复位」——0.1.0.89 及更早都有，会打断长时间擦除。Free 版 MIT 开源（设备级擦除与 18 种扩展算法属商业版 Pro），源码与 Releases 在独立仓库 [UefiEraser](https://github.com/MikeWuPing/UefiEraser) |
 | uwinunlocker | 0.1.0（Build 273） | 2026-10-05 | [v0.1.0.273](https://github.com/MikeWuPing/uwinunlocker/releases/tag/v0.1.0.273) | 首版入列：**离线重置 Windows 本地账户密码**——列出这台机器上所有 Windows + 三态判定（可以重置 / 不能重置 / 判不了）+ 清空密码与「启用并重置 Administrator」+ 写前脏卷门 + 写后逐字节回读。Win10 19045 与 Win11 26200 两条路线都验过，另有一次人工交互验证（清掉一个账户、完全不碰另一个、启用内置 Administrator——三条同时成立）。二进制与 Releases 在独立仓库 [uwinunlocker](https://github.com/MikeWuPing/uwinunlocker) |
-| AdvDiskTest | 0.1.0（Build 469） | 2026-10-14 | [AdvDiskTest-v0.1.0.469](releases/tag/AdvDiskTest-v0.1.0.469) | 首版入列：UEFI 原生硬盘检测——设备识别、健康与磨损双轴判定（档位 + 依据与来源）、PCIe 链路降级判定（六档）、全盘只读表面扫描与逐区域速度剖面、设备自检（不破坏数据）、错误日志、容量核验（含扩容盘识别）、HTML 报告导出；随仓带免 Shell 可直启 ISO |
+| AdvDiskTest | 0.1.0（Build 469） | 2026-10-14 | [AdvDiskTest-v0.1.0.469](https://github.com/MikeWuPing/UEFI_Test_Suite/releases/tag/AdvDiskTest-v0.1.0.469) | 首版入列：UEFI 原生硬盘检测——设备识别、健康与磨损双轴判定（档位 + 依据与来源）、PCIe 链路降级判定（六档）、全盘只读表面扫描与逐区域速度剖面、设备自检（不破坏数据）、错误日志、容量核验（含扩容盘识别）、HTML 报告导出；随仓带免 Shell 可直启 ISO |
 
 > 工具独立 tag/Release 发布（节奏自由）；本表是"套件全家福"锚点，后续工具按同样方式追加行；里程碑时补套件合版（suite-vX.Y.Z）。
 

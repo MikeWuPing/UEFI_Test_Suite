@@ -2,7 +2,7 @@
 
 > [English version below](#english) ｜ [English README](#english)
 
-AdvMemTest 是运行在 **UEFI Shell** 下的图形化内存压力测试工具，对标 Memtest86 全家——装机验收、故障排查与返修质检的第一道关卡。**33 条真实测试 pattern**（地址线 / 数据线 / 电荷保持 / 缓存干扰 / 行锤 / 时序窗口 / 内存原厂算法 / SIMD 宽访存），四线程模式真实多核调度（MP Services）、自我重定位（固定 64 KB 自管栈 + 栈水位遥测）、动态 DIMM 可视化带（槽位/空槽/分组随固件事实渲染，最大 48 槽）、平台信息条（CPU · 主板 · 内存总量 + 起测时刻/已测时长）、HTML 报告自动落盘。**专业版**在经典测试集之上追加 18 条高级 pattern（AMT 系 / 厂商系 / 增补条 / SIMD-256 宽访存——行锤与 SIMD-128 两版都有），并把错误指认精确到**颗粒级**——Socket/Channel/DIMM/Rank/Device 五级坐标，直接回答"哪根条上的哪颗芯片坏了"。
+AdvMemTest 是运行在 **UEFI Shell** 下的图形化内存压力测试工具，对标 Memtest86 全家——装机验收、故障排查与返修质检的第一道关卡。**33 条真实测试 pattern**（地址线 / 数据线 / 电荷保持 / 缓存干扰 / 行锤 / 时序窗口 / 内存原厂算法 / SIMD 宽访存），四线程模式真实多核调度（MP Services）、自我重定位（固定 64 KB 自管栈 + 栈水位遥测）、动态 DIMM 可视化带（槽位/空槽/分组随固件事实渲染，最大 48 槽）、平台信息条（CPU · 主板 · 内存总量 + 起测时刻/已测时长）、HTML 报告自动落盘。**专业版**在经典测试集之上追加 18 条高级 pattern（Advanced 系 / 厂商系 / 增补条 / SIMD-256 宽访存——行锤与 SIMD-128 两版都有），并把错误指认精确到**颗粒级**——Socket/Channel/DIMM/Rank/Device 五级坐标，直接回答"哪根条上的哪颗芯片坏了"。
 
 > 对标 Memtest86 的 UEFI 内存压测——颗粒级定位 / 18 条高级 pattern（Pro 版）。
 
@@ -54,7 +54,7 @@ AdvMemTest 是运行在 **UEFI Shell** 下的图形化内存压力测试工具�
 
 ## 变更记录
 
-- **2026-09-15 · AdvMemTest-v0.1.7**：**AdvMemTest 二进制发布首版（0.1.7 Build 401）**——免费版 **11 条用户可见**经典 pattern（13 条可执行，含 2 条引擎自检参考条）+ 四线程模式 + 自我重定位 + 动态 DIMM 可视化带（SMBIOS 双入口、最大 48 槽、空槽置灰、双路分组头）+ HTML 报告 + 设置持久化。Pro 版同版本交（商务渠道，**31 条全量**）：+18 条高级 pattern（AMT 系/行锤/厂商系/增补条）、颗粒级错误定位（五级坐标 + DIMM 红标 + 平台坐标协议契约）、SPD 深度内存信息页、内存带宽基准、禁用缓存模式、坏块清单导出、512 核多核扩展——商业用途需授权。
+- **2026-09-15 · AdvMemTest-v0.1.7**：**AdvMemTest 二进制发布首版（0.1.7 Build 401）**——免费版 **11 条用户可见**经典 pattern（13 条可执行，含 2 条引擎自检参考条）+ 四线程模式 + 自我重定位 + 动态 DIMM 可视化带（SMBIOS 双入口、最大 48 槽、空槽置灰、双路分组头）+ HTML 报告 + 设置持久化。Pro 版同版本交（商务渠道，**31 条全量**）：+18 条高级 pattern（Advanced 系/行锤/厂商系/增补条）、颗粒级错误定位（五级坐标 + DIMM 红标 + 平台坐标协议契约）、SPD 深度内存信息页、内存带宽基准、禁用缓存模式、坏块清单导出、512 核多核扩展——商业用途需授权。
 - **2026-09-20 · 0.1.7 增量版（Build 562）**：**注册表 31 → 33 条**（+SIMD-128 宽访存，两版默认勾选；+SIMD-256 宽访存，Pro 域且需固件启用 AVX2，未开则自动锁定、不影响其它条）；**内存带宽基准 → 工作集扫描曲线**（免费版读取一条线；Pro 读/写/拷贝 + SIMD 对照 + L1/L2/L3/内存四档缓存台阶标注；报告落"带宽曲线"段）；**内存温度与 ECC**（Pro：SPD 集线器读模组温度、Intel MCA 只读轮询读 CE/UE；健康卡与内存信息页的温度/ECC 明细节，读不到整节不出现）；**底部平台信息条**（两版通用：CPU · 主板 · 内存总量 + 起测时刻 / 已测时长，时长不含暂停、停止后冻结）；**DeviceLocator 长于 23 字符的机器上槽序修正**（旧版截断导致排序平局/数字段翻转，本版按完整字符串排序——槽位、错误日志红标下标与报告网格顺序随之与旧版不同，与"器件编号平移"同批口径）；**内部加固**：新栈 8KB→64KB、修正两处栈/ABI 越界写（安全余量已耗尽、无观测到的损坏；可测内存相应少 56KB，长会话按 64KB/次评估栈占用）；Ventoy 1.1.17 实测两种模式（**专业版请走正常模式**）。
 - **2026-10-06 · 0.1.7 增量版（Build 582）**：**退出路径稳定性修复**（与固件装载/卸载路径的兼容性修正）；**文档更新**（免费版技术手册与快速上手同步刷新，术语与口径对齐）。功能集与 Build 562 一致，两版均含本修复。
 
@@ -72,7 +72,7 @@ AdvMemTest 是运行在 **UEFI Shell** 下的图形化内存压力测试工具�
 
 # AdvMemTest — Memory Stress Test Tool (Binary Release Package)
 
-AdvMemTest is a GUI memory stress-test tool running in **UEFI Shell**, benchmarked against the Memtest86 family — acceptance testing, fault diagnosis and RMA quality inspection. **33 real test patterns** (address, data-line, charge-keep, cache-interference, row hammer, timing windows, memory-vendor algorithms, SIMD wide access), four multi-core scheduling modes over MP Services, self-relocation (a fixed 64 KB self-managed stack with stack-watermark telemetry), a dynamic DIMM strip (slots/empties/groups rendered from firmware facts, up to 48 slots), a platform info bar (CPU · board · memory total, with start time / elapsed), and automatic HTML reports. The **Pro edition** adds 18 advanced patterns (AMT family / vendor family / augmented / SIMD-256 — row hammer and SIMD-128 ship in both editions) and **chip-level error location** — Socket/Channel/DIMM/Rank/Device five-axis coordinates: *which chip on which DIMM failed*.
+AdvMemTest is a GUI memory stress-test tool running in **UEFI Shell**, benchmarked against the Memtest86 family — acceptance testing, fault diagnosis and RMA quality inspection. **33 real test patterns** (address, data-line, charge-keep, cache-interference, row hammer, timing windows, memory-vendor algorithms, SIMD wide access), four multi-core scheduling modes over MP Services, self-relocation (a fixed 64 KB self-managed stack with stack-watermark telemetry), a dynamic DIMM strip (slots/empties/groups rendered from firmware facts, up to 48 slots), a platform info bar (CPU · board · memory total, with start time / elapsed), and automatic HTML reports. The **Pro edition** adds 18 advanced patterns (Advanced family / vendor family / augmented / SIMD-256 — row hammer and SIMD-128 ship in both editions) and **chip-level error location** — Socket/Channel/DIMM/Rank/Device five-axis coordinates: *which chip on which DIMM failed*.
 
 - Version 0.1.7 (Build 582, 2026-10-06; Free 13 visible (15 executable) / Pro 31 listed (33 executable)) ｜ Author: Mike Wu
 - **Release**: tag `AdvMemTest-v0.1.7.582` (2026-10-06; previous: `AdvMemTest-v0.1.7.562` — 2026-09-20; the first suite release was `AdvMemTest-v0.1.7` — 2026-09-15, Build 401, Free 11 visible patterns). The Pro edition is delivered through the business channel only, not published here.

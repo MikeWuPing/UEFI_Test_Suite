@@ -38,11 +38,12 @@ SimpleFileSystem 卷根**上（不依赖程序目录；程序**不扫描可写�
 目录内容
   EFI/BOOT/BOOTX64.EFI   固件启动入口（即 AdvMemTest 本体，启动即进主界面）
   EFI/BOOT/grub.cfg      GRUB 兜底引导配置（Ventoy grub2 模式等链路使用）
-  ESP_IMG.BIN            5MB FAT16 ESP 映像（El Torito 引导链路：Rufus 镜像模式 /
+  ESP_IMG.BIN            5–8MB FAT16 ESP 映像（El Torito 引导链路：Rufus 镜像模式 /
                          balenaEtcher / dd 把本盘当块盘写入时固件从这里引导；
                          内部另有一份 BOOTX64.EFI，不是给 chainload 用的目标。
-                         2026-09-20 起由 16MB 缩到 5MB——Ventoy 正常模式与光驱/
-                         BMC 链路都不读它，缩尺只减小 ISO 体积、不损兼容面）
+                         2026-09-20 起由 16MB 缩到 slim 档；2026-11-03 Build 810
+                         起按载荷定档（Free 5MB / Pro 6MB）——Ventoy 正常模式与
+                         光驱/BMC 链路都不读它，缩尺只减小 ISO 体积、不损兼容面）
   README.txt             盘内英文启动说明（由 ISO 生成器写入；本中文说明随发布包提供）
   boot.cat               引导目录（固件引导所需，勿改）
 
@@ -67,5 +68,5 @@ SimpleFileSystem 卷根**上（不依赖程序目录；程序**不扫描可写�
 - 屏幕分辨率建议 1280x800 或以上（不足时程序会向固件索取更高显示模式）。
 - 界面需要图形控制台（UEFI GOP）；串口只输出日志，不显示界面。
 
-版本：0.1.7（Build 721）｜ APP_VERSION：免费版 v0.1.7.free.721 / 专业版 v0.1.7.pro.721
+版本：0.1.7（Build 810）｜ APP_VERSION：免费版 v0.1.7.free.810 / 专业版 v0.1.7.pro.810
 作者：Mike Wu

@@ -1,6 +1,6 @@
 # advmemtest 快速上手
 
-版本 0.1.7+562（Free / Pro 双 SKU）· 适用环境：X64 UEFI Shell
+版本 0.1.7+810（Free / Pro 双 SKU）· 适用环境：X64 UEFI Shell
 
 ## 前言
 
@@ -28,7 +28,9 @@ advmemtest 是一款运行在 UEFI Shell 下的内存压力测试工具，对标
 
 **厂商专用测试集（Pro 版）。** 内置海力士（SKHYNIX）、三星（SAMSUNG）、美光（MICRON）三家原厂算法。软件读取 SPD 厂商信息后按白名单放行——**union 语义**：只要认得出内存厂商（任一槽命中白名单），**这三条原厂算法就一并进默认集**（不是"逐条对上哪一家"）；读不到厂商信息时三条全不选、仅手动勾选才跑。
 
-**HTML 报告落盘 + 坏块清单（Pro）。** 停止测试（含错误阈值自动停止）、跑满指定轮数时自动把整场测试写成**第一个 SFS 卷根（通常 `fs0:`；串口行固定打印 `fs0:`）**下的 `advmemtest_report.html`（退出时仅在本次系列已有错误且尚未写过报告时补写）：汇总统计、错误明细（Pro 含颗粒定位，Free 仅地址）、错误位分布、累计覆盖、DIMM 布局可视化一页呈现，浏览器直接打开，适合存档和随返修件流转。每次写报告还会在同目录写一份机器可读的 `ADVERR.CSV`（逐条错误，最多 64 行；Free 版定位列恒空，Pro 版带颗粒定位、定位无效时该列留空）。Pro 版同时导出 `badram.txt`（Linux BadRAM 格式）、`badmemorylist.txt`（Windows bcdedit 命令）与 `badram_grow.txt`（**实验性生长档 A/B 对照**——可能过度覆盖健康页，仅供对照，**勿直接用于内核屏蔽**；严格档口径不变、仍是唯一推荐产物）三份坏块清单，报告与串口各给出 A/B 摘要（不自动择优），温度曲线上另按与曲线同轴的真实时间标出错误时刻红点（含起测前/暂停，不是 `TEST_FAIL` 的已测时刻）。
+**HTML 报告落盘 + 坏块清单（Pro）。** 停止测试（含错误阈值自动停止）、跑满指定轮数时自动把整场测试写成**第一个 SFS 卷根（通常 `fs0:`；串口行固定打印 `fs0:`）**下的 `advmemtest_report.html`（退出时仅在本次系列已有错误且尚未写过报告时补写）：汇总统计、错误明细（Pro 含颗粒定位，Free 仅地址）、错误位分布、累计覆盖、DIMM 布局可视化一页呈现，浏览器直接打开，适合存档和随返修件流转。每个测试系列起测时就在同目录创建/清空机器可读的 `ADVERR.CSV`（全部 pattern 比对错误，8 列流式写全，不受报告表格条数限制；Free 版定位列恒空，Pro 版带颗粒定位、定位无效时该列留空）；Pro 另有 `ECCERR.CSV`（全部 CE/UE 事件，9 列流式写全）。报告表格只展示摘要（Pro 条数由 `report.max` 控制，缺省 16；Free 固定 64 条快照），顶部链接对应 CSV（Pro 两个、Free 一个）。Pro 版同时导出 `badram.txt`（Linux BadRAM 格式）、`badmemorylist.txt`（Windows bcdedit 命令）与 `badram_grow.txt`（**实验性生长档 A/B 对照**——可能过度覆盖健康页，仅供对照，**勿直接用于内核屏蔽**；严格档口径不变、仍是唯一推荐产物）三份坏块清单，报告与串口各给出 A/B 摘要（不自动择优），温度曲线上另按与曲线同轴的真实时间标出错误时刻红点（含起测前/暂停，不是 `TEST_FAIL` 的已测时刻）。
+
+**报告与日志设置（设置 → 报告与日志…）。** Pro 可改报告最多显示错误条数（`report.max`，缺省 16，1–64）与错误清单保存上限（`error.max`，缺省 10000，1–1,000,000；`ADVERR.CSV` 与 `ECCERR.CSV` 合计，达到后停止追加，DIMM 错误标记仍全量）。两版都可在同一对话框打开**进度诊断文件**（`PROGRESS.LOG`，**默认关闭**）：勾选后写起测/停止、每条错误/ECC（ECC 行仅 Pro）与周期进度行；周期 = max(`status.interval`, 60) 秒，STATUS 关档 60 秒兜底，**没有 1 秒轮询**。Free 的两个上限项灰显锁定；进度文件的错误行只有地址、无颗粒定位。
 
 ![HTML 报告（错误版）：错误明细 + DIMM 红标](images/s15b-report-err.png)
 
@@ -46,8 +48,9 @@ advmemtest 是一款运行在 UEFI Shell 下的内存压力测试工具，对标
 | 多核轮换与工作量诊断（两版都有） | **FB-40 提速**：`PAR_ROTATE`（逐核轮换）条目在多线程下**缺省只由 1 核跑完整内存**（覆盖等价、不做 ×N 重复全量）；CFG `par.rotate.cores` 调宽度（缺省 1，2..上限=参与核数，`0` = 旧版全核各自全量、最慢）。多核起测且选中这类条目时串口打一行 `perf: N cores x M full-memory pattern(s) (PAR_ROTATE); rotate on K core(s); …`（K = 实际参与轮换核数）。只诊断，不改判定/资格/进度；单核（含拉起失败/降级）不打 | — |
 | 暂停 / 继续 | 运行中按 Esc 或菜单"暂停测试"即暂停（进度现场全保），再按 Esc 或"继续测试"恢复——停止入口只有一个 | ![s16-paused](images/s16-paused.png) |
 | 错误三通道 | 错误日志区 + 串口 TEST_FAIL 行 + 颗粒红光晕，徽章转 FAIL | ![s09-inject](images/s09-inject.png) |
-| DIMM 可视化 | SMBIOS 动态槽位（最大 48，空槽置灰 + 分组头），颗粒图标，活动槽光晕，悬停 tooltip | ![s18-dimms-groups](images/s18-dimms-groups.png) |
-| HTML 报告 | 停止 / 达标时写盘（有错误退出时补写），错误明细 + 错误位分布 + 累计覆盖 + DIMM 布局；随报告写 `ADVERR.CSV`（Pro 版含颗粒定位列，定位无效留空） | ![s15-report](images/s15-report.png) |
+| DIMM 可视化 | SMBIOS 动态槽位（最大 32，空槽置灰 + 分组头），颗粒图标，活动槽光晕，悬停 tooltip；800×600 紧凑档按 rank 画 20 段颗粒条、短槽名（`A1 · 32G`）、钢色金手指 | ![s18-dimms-groups](images/s18-dimms-groups.png) |
+| HTML 报告 | 停止 / 达标时写盘（有错误退出时补写），错误明细 + 错误位分布 + 累计覆盖 + DIMM 布局（卡片 320×150；Pro 的 CE/UE 有文字定位）；起测即流式写 `ADVERR.CSV`（Pro 另写 `ECCERR.CSV`），报告只做摘要并链接 CSV | ![s15-report](images/s15-report.png) |
+| 报告与日志设置 | 设置 → 报告与日志…：Pro 可改 `report.max`（缺省 16，1–64）与 `error.max`（缺省 10000）；两版均可开 `PROGRESS.LOG`（默认关，周期 max(status.interval,60) 秒，无 1 秒轮询） | — |
 | ECC 会话判定（两版都有） | 起测取 MCA bank 基线、停止做逐 bank 差分：新增 UE 或新增 CE 达阈值即判 ECC FAIL 并进 `RESULT`（`errors=0` 也可 FAIL）；`ecc.ue.fail` / `ecc.ce.threshold` **两键均 Pro 专属**（CFG 或 PXE site.cfg），Free 固定缺省策略；无通路判 UNKNOWN、不拖红；Pro 报告含"会话新增/判定"行，Free 仅串口 | — |
 | ECC 地址/颗粒定位（Pro） | 有记录的 MCA bank 在 `MCi_STATUS` 的 ADDRV=1 时读 `MCi_ADDR`；串口逐 bank 打 `ECC_LOC:` 定位行（地址 + `S/C/D/R/dev` 位置），报告 MCA bank 明细为六列（bank/类型/MCi_STATUS/地址/位置/**Misc**；Misc 追加在最后，按五列解析的旧脚本仍兼容；`misc=0x…`/`misc=-` 只透传不解码），内存信息页 bank 条目主行尾附 ` · R<n>/dev<n>`、Misc 另起子行；内置几何近似映射标 `(approx)` | — |
 | 介质能不能存设置/报告 | 按启动形态而异——**本地启动要两者都稳**请把 efi 拷到可写 FAT32 盘跑；**Pro 版 PXE 直启的设置只能由 `site.cfg` 下发**（详表见两本详版手册 1.2） | — |
@@ -57,12 +60,13 @@ advmemtest 是一款运行在 UEFI Shell 下的内存压力测试工具，对标
 | 带宽基准（两版都有） | 工作集扫描带宽曲线；Free 只画读取一条线，Pro 另加写/拷贝/SIMD 对照三条与四档缓存台阶标注 | ![s24-bench](images/s24-bench.png) |
 | 缓存开/关 A/B（Pro） | CFG-only `cache.ab=1`：同一 pattern 集先缓存开跑一轮、再 CR0.CD 缓存关跑一轮，报告按（地址,异或,pattern）差分 `only_a`/`only_b`/`both`；强制两轮、不改 CFG 的 `pass.limit`；错误快照截断时明确标注"不构成完整对照"；Free 读到该键忽略 | — |
 | 坏区排除/定点复测（Pro） | 启动参数 `retest=exclude`（跳过 `fs0:\badram.txt` 已知坏页）或 `retest=focus`（只测故障地址 ±N MB 窗口，`retest.window.mb` 1–1024、缺省 64）；只改测试视图、不改占用/归还；解析截断/错误/空视图 fail-closed 拒启；报告 `复测视图` 节明示结果不代表全内存健康；Free 忽略 | — |
+| 测试地址范围（Pro） | 设置→测试配置内取消“测试全部内存范围”后填起始/结束物理地址（均为**含端点**、实际按 4KB 页对齐）；CFG `test.start`/`test.end` 持久化，启动参数 `-range=0xSTART-0xEND` / `-range=full` 只覆盖**本次会话**；与限额/复测叠加为空则拒启；报告加“仅该区间参与测试”限定语（零错误 PASS 不代表全内存健康）；Free 仅显示锁定行 | — |
 | 跨会话趋势（Pro） | 每次报告追加 `fs0:\advmemtest_sessions.csv`（同机最近 200 条）；报告多出“历史趋势”节，列最近 10 次与 `Δ错误`/`ΔTTFF`；删除 CSV 即清空；Free 不生成 | — |
 | 料单核验（Pro） | 启动参数 `bom=check` + `fs0:\expected_bom.csv`（无引号五列 CSV：slot,capacity_mb,ranks,vendor,part）；逐槽比对容量/rank/厂商/料号，未报字段算 UNKNOWN；报告“料单核验”节 + 串口 `bom:` verdict；缺/坏文件只 WARN 省略；Free 忽略 | — |
 | 注入演示（Pro） | 勾选体验功能或 inject-demo 参数，演示错误上报全链路 | ![s06-feature](images/s06-feature.png) |
 | 退出 | 空闲 Esc 或"帮助 → 退出"弹退出确认；运行中 Esc 是暂停/继续 | ![s07-quit](images/s07-quit.png) |
 
-**免费版的设置菜单同样是六项**：后两项「体验功能…」「内存信息…」为 Pro 锁定导流项——灰显 + 锁标，点击弹 Pro 授权提示；「测试配置」底部还多一行「禁用缓存测试模式（Pro）」锁定说明（无控件）。这三处只是升级入口，免费版镜像不含对应实现代码。
+**免费版的设置菜单同样是七项**：第五、第六项「体验功能…」「内存信息…」为 Pro 锁定导流项——灰显 + 锁标，点击弹 Pro 授权提示；第七项「报告与日志…」两版都有，免费版两个上限字段灰显锁定、进度诊断文件开关可用；「测试配置」底部还多「禁用缓存测试模式（Pro）」与「测试地址范围（Pro）」两组锁定说明（灰字 + 锁标、无控件、不进焦点圈）。这几处只是升级入口，免费版镜像不含对应实现代码。
 
 ## 快速上手
 
@@ -70,14 +74,14 @@ advmemtest 是一款运行在 UEFI Shell 下的内存压力测试工具，对标
 
 **第一步，拷入 Shell。** 把版本对应的 efi（`AdvMemTestFree.efi` 或 `AdvMemTestPro.efi`）复制到 UEFI Shell 所在盘（通常就是 fs0:）；Pro 版同时拷贝授权文件 `ADVMTEST.LIC` 到同目录。**第二步，启动。** 在 Shell 提示符下输入文件名回车；也可以写进 `startup.nsh`，开机进 Shell 自动运行。**第三步，起测。** 两个 SKU 的缺省行为不同：**Free 版**主界面就绪后**10 秒无操作即自动开始测试**（状态栏逐秒提示"将在 N 秒后自动开始测试（按任意键取消）"；倒计时期间按任意键或移动鼠标即取消，本会话不再自动起测）；**Pro 版缺省不自动起测**，主界面停在空闲态等待手动起测，或等待上位机经串口发启动键（`serial.start=1`，缺省键 `A`，串口会先打提示行，详见专业版手册 6.7；要恢复倒计时请在 CFG 写 `auto.start=1` 或在设置里勾选）。手动起测 = 展开"测试"菜单选"开始测试"（连按两下回车：第一下展开菜单、第二下选中该项；鼠标点菜单效果相同）；倒计时可在"设置 → 测试配置"里关闭或改时长（3–120 秒）。无论哪种起测方式，默认集都已含全部适用 pattern，多核机器自动进入多核并行模式（切分类 pattern 全核并发；轮换类 pattern 缺省只由 1 核跑完整内存，可用 `par.rotate.cores` 调宽）；此时串口会多一行 `perf:` 工作量诊断（含义与收口建议见下方"功能一览"的"多核轮换与工作量诊断"行）。**第四步，看进度。** 关注整轮进度条与"已测"统计卡；DIMM 带上光晕流动的位置，就是当前正在压测的内存区域。**第五步，暂停、停止与退出。** 运行中按 Esc 是暂停测试——进度、错误现场全保，再按 Esc（或点菜单"继续测试"）恢复，不用担心按错把工作白做；要真正停止，打开"测试"菜单选"停止测试"（停止的同时自动写报告）。要退出程序：空闲时按 Esc，或走"帮助 → 退出"——后者测试跑着也能直达退出确认框（确认后即退出，未跑完的进度会丢）。另外，"停止测试"在尚未开始测试时是灰显不可点的，起测后恢复可点。
 
-报告位置：固件枚举到的第一个 SFS 卷根（通常是 `fs0:`）下的 `advmemtest_report.html`（Pro 版另有 `badram.txt` / `badmemorylist.txt` / `badram_grow.txt`——最后一份是实验性 A/B 对照，勿直接用于内核屏蔽），同目录另有错误明细 `ADVERR.CSV`；退出 Shell 后用浏览器打开报告即可。
+报告位置：固件枚举到的第一个 SFS 卷根（通常是 `fs0:`）下的 `advmemtest_report.html`（Pro 版另有 `badram.txt` / `badmemorylist.txt` / `badram_grow.txt`——最后一份是实验性 A/B 对照，勿直接用于内核屏蔽），同目录另有错误明细 `ADVERR.CSV`（Pro 还有 `ECCERR.CSV`）；若在"报告与日志…"里开启进度诊断文件，还会多一份 `PROGRESS.LOG`。退出 Shell 后用浏览器打开报告即可。
 
 ## 运行环境与发布信息
 
 - **运行环境**：X64 UEFI 固件，通过 BIOS 设置或启动菜单进入 UEFI Shell，或从 PXE 网络启动（专业版）；鼠标与键盘均可操作；界面全简体中文。
 - **PXE 部署（专业版）**：把 Pro efi 改名为 DHCP 指定的启动文件名（通常 `BOOTX64.EFI`），与站点授权 `site.lic`（可选只读配置 `site.cfg`）一起放进 PXE 服务器的 TFTP 根，客户机从网络启动即可；服务器侧不需要授权服务或 TLS，续期只替换 `site.lic`。免费版可被 PXE 启动，但镜像不含网络取件代码。完整步骤见 `docs/advmemtest-pxe-deployment-guide.md`。
 - **操作说明**：菜单与对话框以键盘 Tab（焦点循环）/ 上下键 / 回车为主，**鼠标滚轮同样可用**——指针悬停在滚动容器（对话框清单、帮助正文等）上滚动滚轮即可，容器内的提示条会给出用法（"鼠标滚屏：滚轮滚动，或按住左键拖动"）；侧边滚动条为显示指示件。退出后程序回到固件引导流程，Shell 提示符应正常返回；若个别平台控制台无响应，断电重启即可。
-- **发布形式**：`AdvMemTestFree.efi` / `AdvMemTestPro.efi` 双产物（单文件无外部依赖，版本 0.1.7）。启动画面固定角落与串口输出 `APP_VERSION=v<版本>.<sku>.<构建号>`（如 v0.1.7.free.562），可与构建记录核对。
-- **技术特性速览**：36 条真实 pattern（Free 用户可见 14 条；2 条引擎自检参考条不对外展示；增补条与 Id 33–35 默认不勾选；SIMD-256 需固件启用 AVX2，多数固件未开时自动锁定、不影响其它条）；起测缺省：Free 版 10 秒倒计时自动起测（按任意键/移动鼠标取消，可关闭或调时长）；Pro 版缺省不自动起测，支持串口触发起测（`serial.start`）与完成动作（`finish.action`）；四线程模式（MP Services 真实多核调度，顺序轮巡/轮流两模式 Pro 专属，Free 上限 16 / Pro 上限 512）；SMBIOS 动态 DIMM 可视化带（最大 48 槽）；底部平台信息条（CPU · 主板 · 内存总量 + 起测时刻 / 已测时长）；Pro 版 SPD 深度内存信息页（含内存设置、温度与 ECC 明细；IMC 实况时序不可用）、厂商门控、颗粒级错误定位、带宽曲线、禁用缓存、缓存开/关 A/B 对照（CFG-only）、坏块清单导出（含实验性生长档 A/B 对照，不自动择优）；自我重定位；HTML 报告（错误位分布 / 累计覆盖 + `ADVERR.CSV`）；分辨率自适应（≥1280×800 自动索取）；设置持久化（ADVMTEST.CFG 与软件同级存放）。
+- **发布形式**：`AdvMemTestFree.efi` / `AdvMemTestPro.efi` 双产物（单文件无外部依赖，版本 0.1.7）。启动画面固定角落与串口输出 `APP_VERSION=v<版本>.<sku>.<构建号>`（如 v0.1.7.free.810），可与构建记录核对。
+- **技术特性速览**：36 条真实 pattern（Free 用户可见 14 条；2 条引擎自检参考条不对外展示；增补条与 Id 33–35 默认不勾选；SIMD-256 需固件启用 AVX2，多数固件未开时自动锁定、不影响其它条）；起测缺省：Free 版 10 秒倒计时自动起测（按任意键/移动鼠标取消，可关闭或调时长）；Pro 版缺省不自动起测，支持串口触发起测（`serial.start`）与完成动作（`finish.action`）；四线程模式（MP Services 真实多核调度，顺序轮巡/轮流两模式 Pro 专属，Free 上限 16 / Pro 上限 512）；SMBIOS 动态 DIMM 可视化带（最大 32 槽）；底部平台信息条（CPU · 主板 · 内存总量 + 起测时刻 / 已测时长）；Pro 版 SPD 深度内存信息页（含内存设置、温度与 ECC 明细；IMC 实况时序不可用）、厂商门控、颗粒级错误定位、带宽曲线、禁用缓存、缓存开/关 A/B 对照（CFG-only）、坏块清单导出（含实验性生长档 A/B 对照，不自动择优）；自我重定位；HTML 报告（错误位分布 / 累计覆盖 + `ADVERR.CSV` / `ECCERR.CSV`）+ 报告与日志设置（`report.max` / `error.max` 为 Pro，`progress.file` 两版默认关）；分辨率自适应（≥1280×800 自动索取）；设置持久化（ADVMTEST.CFG 与软件同级存放）。
 - **许可证**：免费版个人用户免费使用；专业版商业用途（营利性部署 / 分发 / 预装）需授权——升级途径：请联系作者（详见专业版技术手册 `docs/manual/user-guide-pro.md` 第七章）。
 - **颗粒定位精度**：在真实服务器平台上以固件内存控制器的地址交错映射为准（"近似映射 / 平台映射"两级标注见 `docs/manual/user-guide-pro.md` 4.2）；本手册所述行为以 QEMU 验证环境为基准，真机差异以实测为准。

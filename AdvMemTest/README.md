@@ -8,8 +8,8 @@ AdvMemTest 是运行在 **UEFI Shell** 下的图形化内存压力测试工具�
 
 ![AdvMemTest 主界面（16 槽双组 DIMM 带）](docs/manual/images/s18-dimms-groups.png)
 
-- **版本**：0.1.7（Build 810；免费版 14 条用户可见（16 条可执行）/ 专业版 34 条目录（36 条可执行））——构建号每次构建递增，发布时以实际产物为准
-- **发布**：tag **`AdvMemTest-v0.1.7.810`**（2026-11-03、Build 810、免费版 14 条用户可见；前版 `AdvMemTest-v0.1.7.721`——2026-10-25、`AdvMemTest-v0.1.7.594`——2026-10-15、`AdvMemTest-v0.1.7.582`——2026-10-06、`AdvMemTest-v0.1.7.562`——2026-09-20；首个入列版为 `AdvMemTest-v0.1.7`——2026-09-15、Build 401。Pro 版不发公开渠道——商务私发）
+- **版本**：0.2.2（Build 916；免费版 14 条用户可见（16 条可执行）/ 专业版 34 条目录（36 条可执行））——构建号每次构建递增，发布时以实际产物为准
+- **发布**：tag **`AdvMemTest-v0.2.2.916`**（2026-11-15、Build 916、免费版 14 条用户可见；前版 `AdvMemTest-v0.1.7.810`——2026-11-03、`AdvMemTest-v0.1.7.721`——2026-10-25、`AdvMemTest-v0.1.7.594`——2026-10-15、`AdvMemTest-v0.1.7.582`——2026-10-06、`AdvMemTest-v0.1.7.562`——2026-09-20；首个入列版为 `AdvMemTest-v0.1.7`——2026-09-15、Build 401。Pro 版不发公开渠道——商务私发）
 - **作者**：Mike Wu
 - **许可**：个人用户免费使用；商业用途需授权（商业路径 = AdvMemTest 专业版授权，请联系作者）——见[套件根 README 的许可节](../README.md)
 - **产品手册**：[免费版技术手册（MD）](docs/manual/advmemtest-free-user-guide.md) ｜ [Word 版](docs/manual/advmemtest-free-user-guide.docx) ｜ [快速上手（MD）](docs/manual/advmemtest-quick-guide.md) ｜ [Word 版](docs/manual/advmemtest-quick-guide.docx) ｜ [功能演示 GIF](docs/manual/advmemtest-feature-tour.gif) ｜ [ISO 用法说明](docs/manual/iso-boot-readme.txt) —— 含全部功能截图与使用说明
@@ -18,10 +18,10 @@ AdvMemTest 是运行在 **UEFI Shell** 下的图形化内存压力测试工具�
 
 | 文件 | 说明 |
 |---|---|
-| `binaries/advmemtest-free.efi` | 应用本体（UEFI x64 应用，约 2.6 MB）——**免费版**，个人用户免费使用、无需授权文件 |
-| `iso/AdvMemTest-boot-0.1.7.810+20261103_215709.iso` | **可启动光盘镜像**（免 UEFI Shell 直启 Live-CD，El Torito + 内嵌 ESP，约 8.0 MB；文件名带版本号 + 时间戳——改版留档）。用法与注意事项见 [ISO 用法说明](docs/manual/iso-boot-readme.txt) |
+| `binaries/advmemtest-free.efi` | 应用本体（UEFI x64 应用，约 2.7 MB）——**免费版**，个人用户免费使用、无需授权文件 |
+| `iso/AdvMemTest-boot-0.2.2.916+20261115_150426.iso` | **可启动光盘镜像**（免 UEFI Shell 直启 Live-CD，El Torito + 内嵌 ESP，约 8.2 MB；文件名带版本号 + 时间戳——改版留档）。用法与注意事项见 [ISO 用法说明](docs/manual/iso-boot-readme.txt) |
 | `docs/manual/` | 产品手册（免费版技术手册 + 快速上手，各 MD + Word）+ 功能截图 + 功能演示动图 + ISO 用法说明 |
-| `AdvMemTest-0.1.7.810+20261103_215709.zip` | 便捷包（程序 + ISO + 手册 + 截图，约 6.3 MB——与 Release 资产同内容） |
+| `AdvMemTest-0.2.2.916+20261115_150426.zip` | 便捷包（程序 + ISO + 手册 + 截图，约 9.4 MB——与 Release 资产同内容） |
 
 专业版（`AdvMemTestPro.efi` + `ADVMTEST.LIC` 授权文件）不随本目录公开发布：商业用途请联系作者，获授权后按商务渠道交付（授权文件校验全程离线，RSA-2048 验签）。
 
@@ -42,18 +42,25 @@ AdvMemTest 是运行在 **UEFI Shell** 下的图形化内存压力测试工具�
 
 ![内存带宽曲线对话框（两版通用；图示为 Pro 的四线形态）](docs/manual/images/s24-bench.png)
 
+## 0.2.2 / 916 本版重点
+
+- **Free**：新增 TestMem5 `.cfg` 配置导入、F6 热键快照（HTML + BMP）、更完整的测试配置与四档预设、四菜单重组和 800×600 适配；主界面健康卡在 Free 上只显示可读的 ECC 一侧；会话趋势把 0 轮/手动停止判为 STOPPED。
+- **Pro**：新增 `ecc path:` 路径取证行、Intel Server IMC CLTT 温度源、SPD 位宽 0/1 基 DimmId 对账；定位链原有能力继续保留，本版补的是取证细节。
+- DIMM 可视化仍按 SMBIOS 事实排布，最多 32 槽；2R x4 服务器条按 40 颗器件展示。
+
 ## 平台与运行要求
 
 | 项目 | 要求 |
 |---|---|
 | 平台 | x64（x86-64）UEFI 固件，无操作系统要求 |
-| 启动形态 | 可直启 ISO（`iso/AdvMemTest-boot-0.1.7.810+20261103_215709.iso`，刻盘/挂 BMC 虚拟光驱即用，不需要先有 UEFI Shell；使用前先关 Secure Boot）或 UEFI Shell 手动/自动运行（`binaries/advmemtest-free.efi`，单文件无外部依赖、无需授权文件） |
+| 启动形态 | 可直启 ISO（`iso/AdvMemTest-boot-0.2.2.916+20261115_150426.iso`，刻盘/挂 BMC 虚拟光驱即用，不需要先有 UEFI Shell；使用前先关 Secure Boot）或 UEFI Shell 手动/自动运行（`binaries/advmemtest-free.efi`，单文件无外部依赖、无需授权文件） |
 | 介质 | FAT 系卷（Shell 所在盘） |
 | 屏幕 | 1280×800 或更高（不足时自动向固件索取高分辨率模式；降级可用，建议最小 1024×768） |
 | 推荐内存 | 512 MB+；被测内存由工具向固件申请、测完归还 |
 
 ## 变更记录
 
+- **2026-11-15 · 0.2.2（Build 916）**：Free 版新增 TM5 配置导入、F6 热键快照、测试配置与预设、四菜单与 800×600 适配、健康卡 ECC 口径与会话 STOPPED；Pro 版补 `ecc path:`、Intel Server CLTT 温度与 SPD 位宽对账。公仓只发布 Free 二进制，Pro/Site 走商务渠道。
 - **2026-11-03 · 0.1.7 增量版（Build 810）**：**2R x4 服务器条整条 40 颗粒显示**（按 Front/Back × rank × 子通道分区，悬停约 1 秒或点击打开详情；报告按 32 槽 × 40 颗粒绘制）；**800×600 紧凑档修复**（颗粒条、`A1 · 32G` 槽名、金手指与错误日志重叠）；`ADVERR.CSV` 改为起测即逐条流式追加全部 pattern 错误；设置菜单新增“报告与日志…”（免费版可开启 `PROGRESS.LOG`）；报告拓扑核对、320×150 DIMM 卡片、256KB 报告缓冲与 CE PASS 琥珀徽章。Pattern 集合不变（16 条可执行 / 14 条可见 / 13 条默认）。
 - **2026-09-15 · AdvMemTest-v0.1.7**：**AdvMemTest 二进制发布首版（0.1.7 Build 401）**——免费版 **11 条用户可见**经典 pattern（13 条可执行，含 2 条引擎自检参考条）+ 四线程模式 + 自我重定位 + 动态 DIMM 可视化带（SMBIOS 双入口、最大 48 槽、空槽置灰、双路分组头）+ HTML 报告 + 设置持久化。Pro 版同版本交（商务渠道，**31 条全量**）：+18 条高级 pattern（Advanced 系/行锤/厂商系/增补条）、颗粒级错误定位（五级坐标 + DIMM 红标 + 平台坐标协议契约）、SPD 深度内存信息页、内存带宽基准、禁用缓存模式、坏块清单导出、512 核多核扩展——商业用途需授权。
 - **2026-09-20 · 0.1.7 增量版（Build 562）**：**注册表 31 → 33 条**（+SIMD-128 宽访存，两版默认勾选；+SIMD-256 宽访存，Pro 域且需固件启用 AVX2，未开则自动锁定、不影响其它条）；**内存带宽基准 → 工作集扫描曲线**（免费版读取一条线；Pro 读/写/拷贝 + SIMD 对照 + L1/L2/L3/内存四档缓存台阶标注；报告落"带宽曲线"段）；**内存温度与 ECC**（Pro：SPD 集线器读模组温度、Intel MCA 只读轮询读 CE/UE；健康卡与内存信息页的温度/ECC 明细节，读不到整节不出现）；**底部平台信息条**（两版通用：CPU · 主板 · 内存总量 + 起测时刻 / 已测时长，时长不含暂停、停止后冻结）；**DeviceLocator 长于 23 字符的机器上槽序修正**（旧版截断导致排序平局/数字段翻转，本版按完整字符串排序——槽位、错误日志红标下标与报告网格顺序随之与旧版不同，与"器件编号平移"同批口径）；**内部加固**：新栈 8KB→64KB、修正两处栈/ABI 越界写（安全余量已耗尽、无观测到的损坏；可测内存相应少 56KB，长会话按 64KB/次评估栈占用）；Ventoy 1.1.17 实测两种模式（**专业版请走正常模式**）。
@@ -77,15 +84,15 @@ AdvMemTest 是运行在 **UEFI Shell** 下的图形化内存压力测试工具�
 
 AdvMemTest is a GUI memory stress-test tool running in **UEFI Shell**, benchmarked against the Memtest86 family — acceptance testing, fault diagnosis and RMA quality inspection. **36 real test patterns** (address, data-line, charge-keep, cache-interference, row hammer, timing windows, memory-vendor algorithms, SIMD wide access, bus stress, cache-resident and BG stripe), four multi-core scheduling modes over MP Services, self-relocation (a fixed 64 KB self-managed stack with stack-watermark telemetry), a dynamic DIMM strip (slots/empties/groups rendered from firmware facts, up to 32 slots), a platform info bar (CPU · board · memory total, with start time / elapsed), and automatic HTML reports. The **Pro edition** adds 20 advanced patterns (Advanced family / vendor family / augmented / SIMD-256 / cache-resident / BG-stripe — row hammer and SIMD-128 ship in both editions) and **chip-level error location** — Socket/Channel/DIMM/Rank/Device five-axis coordinates: *which chip on which DIMM failed*.
 
-- Version 0.1.7 (Build 810, 2026-11-03; Free 14 visible (16 executable) / Pro 34 listed (36 executable)) ｜ Author: Mike Wu
-- **Release**: tag `AdvMemTest-v0.1.7.810` (2026-11-03; previous: `AdvMemTest-v0.1.7.721` — 2026-10-25, `AdvMemTest-v0.1.7.594` — 2026-10-15, `AdvMemTest-v0.1.7.582` — 2026-10-06, `AdvMemTest-v0.1.7.562` — 2026-09-20; the first suite release was `AdvMemTest-v0.1.7` — 2026-09-15, Build 401, Free 11 visible patterns). The Pro edition is delivered through the business channel only, not published here.
-- **Download**: `binaries/advmemtest-free.efi` (~2.6 MB, Free edition, free for personal use) and `iso/AdvMemTest-boot-0.1.7.810+20261103_215709.iso` (~8.0 MB shell-free bootable Live-CD); the convenience bundle `AdvMemTest-0.1.7.810+20261103_215709.zip` (~6.3 MB). The Pro edition is delivered by business channel only (binary + `ADVMTEST.LIC`).
+- Version 0.2.2 (Build 916, 2026-11-15; Free 14 visible (16 executable) / Pro 34 listed (36 executable)) ｜ Author: Mike Wu
+- **Release**: tag `AdvMemTest-v0.2.2.916` (2026-11-15; previous: `AdvMemTest-v0.1.7.810` — 2026-11-03, `AdvMemTest-v0.1.7.721` — 2026-10-25, `AdvMemTest-v0.1.7.594` — 2026-10-15, `AdvMemTest-v0.1.7.582` — 2026-10-06, `AdvMemTest-v0.1.7.562` — 2026-09-20; the first suite release was `AdvMemTest-v0.1.7` — 2026-09-15, Build 401, Free 11 visible patterns). The Pro edition is delivered through the business channel only, not published here.
+- **Download**: `binaries/advmemtest-free.efi` (~2.7 MB, Free edition, free for personal use) and `iso/AdvMemTest-boot-0.2.2.916+20261115_150426.iso` (~8.2 MB shell-free bootable Live-CD); the convenience bundle `AdvMemTest-0.2.2.916+20261115_150426.zip` (~9.4 MB). The Pro edition is delivered by business channel only (binary + `ADVMTEST.LIC`).
 - **License**: free for personal use; commercial use requires a license — the commercial path is the AdvMemTest Pro edition; please contact the author. See the License section of the [suite root README](../README.md).
 - **Docs**: [Free manual (MD)](docs/manual/advmemtest-free-user-guide.md) ｜ [Word](docs/manual/advmemtest-free-user-guide.docx) ｜ [quick start (MD)](docs/manual/advmemtest-quick-guide.md) ｜ [Word](docs/manual/advmemtest-quick-guide.docx) ｜ [feature GIF](docs/manual/advmemtest-feature-tour.gif) ｜ [ISO usage notes](docs/manual/iso-boot-readme.txt)
 
 Boot the ISO from a USB stick (Rufus / balenaEtcher / Ventoy in **normal mode**) or a BMC virtual CD — no UEFI Shell needed; **disable Secure Boot first** (the image is unsigned). Ventoy was verified on 1.1.17 only.
 
-## What changed in 0.1.7.810
+## What changed in 0.1.7.810 (previous release)
 
 - Full 40-DRAM 2R x4 server-DIMM view with click/hover detail; 32-slot × 40-DRAM report layout.
 - 800×600 compact-strip, slot-label, gold-finger colour and error-log overlap fixes.
@@ -94,6 +101,12 @@ Boot the ISO from a USB stick (Rufus / balenaEtcher / Ventoy in **normal mode**)
 - Topology cross-check, 320×150 DIMM cards, 256 KB report buffer and amber PASS badge on ECC CE.
 - Pattern set unchanged: 16 executable / 14 visible / 13 default in the Free edition.
 
+
+## What's new in 0.2.2.916
+
+- Free: TestMem5 `.cfg` import, F6 snapshot (HTML + BMP), richer test configuration and four presets, four-menu layout, 800×600 adaptation, ECC-only health card semantics, and STOPPED for zero-pass/manual-stop trends.
+- Pro: `ecc path:` evidence line, Intel Server IMC CLTT temperature, and SPD-width 0/1-based DimmId reconciliation. The location chain itself is not new; this release deepens its evidence.
+- DIMM layout still follows SMBIOS facts, up to 32 slots; 2R x4 server modules render all 40 devices.
 
 ## License
 

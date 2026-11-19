@@ -1,0 +1,20 @@
+uBurnInTest — 许可说明 / Licence Notice
+
+Copyright (c) 2026 Mike Wu. All rights reserved.
+
+本软件不是开源软件；本发布仓不包含任何源码。
+
+个人用户免费使用：自用、学习研究、评估选型不收费，也无需申请。
+商业用途（随产品分发、产线交付、集成进其它方案等）需事先取得作者书面授权。
+
+This software is NOT open source and this release repository contains no source code.
+
+Free for personal use: personal, educational, study and evaluation use costs
+nothing and needs no application. Commercial use (shipping with a product,
+production-line delivery, embedding in another offering, or any commercial
+advantage) requires prior written authorisation from the author.
+
+作者 / Author: Mike Wu <mikewuping@163.com>
+
+第三方组件：LVGL 的 UEFI 移植层遵循其自身许可。
+Third-party component: the LVGL UEFI port follows its own licence.

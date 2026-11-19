@@ -19,6 +19,7 @@
 | [uwinunlocker](uwinunlocker/) | 图形化**离线重置 Windows 本地账户密码**工具（对标 PCUnlocker / PassFab / chntpw）：在操作系统起来之前，列出这台机器上**所有已安装的 Windows** 并逐个给出**三态判定**（可以重置 / 不能重置 / **判不了**），选中账户后一键清空密码，内置 `Administrator` 则按钮变字为「启用并重置密码」；不用进 Windows、不用原密码、不联网，**不替换 `sethc.exe`、不改引导链、不动系统里的任何可执行文件**；**写前读卷脏标志**（强制断电或开着"快速启动"关机的卷一律拒绝写入）、**写后把文件读回来逐字节比对**；BitLocker 卷、微软账户、域账户明确列为"不支持"并说清是哪一条阻碍；液态玻璃界面、全简体中文，`Tab` 焦点环 + `Esc` 随处可退，**全流程不用鼠标**；免 Shell 可直启 ISO。个人用户免费 | [详细说明](uwinunlocker/README.md) ｜ [产品手册](uwinunlocker/docs/manual/README.md) |
 | [AdvDiskTest](AdvDiskTest/) | 图形化硬盘检测工具（UEFI 原生，无操作系统）：设备识别（NVMe / ATA）+ 健康与磨损双轴判定（档位 + 依据与来源）+ PCIe 链路降级判定（六档）+ 全盘只读表面扫描与逐区域速度剖面 + 设备自检（不破坏数据）+ 错误日志 + 容量核验（含扩容盘识别）+ HTML 报告导出；免 Shell 可直启 ISO | [详细说明](AdvDiskTest/README.md) ｜ [产品手册](AdvDiskTest/docs/manual/advdisktest-free-user-guide.md) |
 
+| [uBurnInTest](uBurnInTest/) | 图形化**整机老化与验收**工具（UEFI Shell、操作系统之前）：十个压力项同时压 CPU / 内存 / 存储 / 显存 / 缓存 / SIMD / 随机事务内存 / 磁盘随机寻道 / PCIe 链路 / 多核同步，写进去再读回来逐字节比对；进度 / 硬件 / 统计卡 / 坏点色卡 / **核间延迟矩阵**六类视图；文本报告 + HTML 报告 + 可打印证书 + 基线对比 + 多机批量汇总；`UBIT_CFG.TXT` 无人值守多轮。个人用户免费，非开源 | [详细说明](uBurnInTest/README.md) ｜ [产品手册](uBurnInTest/docs/manual/uBurnInTest-产品手册.md) |
 
 ## 版本对齐表 / Release Matrix
 
@@ -30,6 +31,7 @@
 | UefiEraser | 0.1.0（Build 90） | 2026-09-19 | [UefiEraser-v0.1.0.90](https://github.com/MikeWuPing/UefiEraser/releases/tag/v0.1.0.90) | 首版入列：整盘 / 分区 / 空闲空间粉碎 + 12 种行业标准算法 + 末遍回读校验 + 安全闸门 + 报告与 CSV 审计日志；本版修掉「运行约 5 分钟后被固件看门狗复位」——0.1.0.89 及更早都有，会打断长时间擦除。Free 版 MIT 开源（设备级擦除与 18 种扩展算法属商业版 Pro），源码与 Releases 在独立仓库 [UefiEraser](https://github.com/MikeWuPing/UefiEraser) |
 | uwinunlocker | 0.1.0（Build 273） | 2026-10-05 | [v0.1.0.273](https://github.com/MikeWuPing/uwinunlocker/releases/tag/v0.1.0.273) | 首版入列：**离线重置 Windows 本地账户密码**——列出这台机器上所有 Windows + 三态判定（可以重置 / 不能重置 / 判不了）+ 清空密码与「启用并重置 Administrator」+ 写前脏卷门 + 写后逐字节回读。Win10 19045 与 Win11 26200 两条路线都验过，另有一次人工交互验证（清掉一个账户、完全不碰另一个、启用内置 Administrator——三条同时成立）。二进制与 Releases 在独立仓库 [uwinunlocker](https://github.com/MikeWuPing/uwinunlocker) |
 | AdvDiskTest | 0.1.0（Build 469） | 2026-10-14 | [AdvDiskTest-v0.1.0.469](https://github.com/MikeWuPing/UEFI_Test_Suite/releases/tag/AdvDiskTest-v0.1.0.469) | 首版入列：UEFI 原生硬盘检测——设备识别、健康与磨损双轴判定（档位 + 依据与来源）、PCIe 链路降级判定（六档）、全盘只读表面扫描与逐区域速度剖面、设备自检（不破坏数据）、错误日志、容量核验（含扩容盘识别）、HTML 报告导出；随仓带免 Shell 可直启 ISO |
+| uBurnInTest | 0.1.0（Build 424） | 2026-11-19 | [uBurnInTest-v0.1.0.424](https://github.com/MikeWuPing/UEFI_Test_Suite/releases/tag/uBurnInTest-v0.1.0.424) | 首版入列：整机老化与验收台——十个真实压力模块（写后逐字节回读）+ 六类视图（含核间延迟 N×N 矩阵）+ 报告 / 证书 / 基线 / 批量汇总 + `UBIT_CFG.TXT` 无人值守；只发布二进制与手册，源码不公开 |
 
 > 工具独立 tag/Release 发布（节奏自由）；本表是"套件全家福"锚点，后续工具按同样方式追加行；里程碑时补套件合版（suite-vX.Y.Z）。
 
@@ -117,6 +119,17 @@
 - 详见 [AdvDiskTest 说明](AdvDiskTest/README.md) ｜ [免费版用户手册（MD/Word）](AdvDiskTest/docs/manual/advdisktest-free-user-guide.md) ｜ [功能演示 GIF](AdvDiskTest/docs/manual/advdisktest-feature-tour.gif)
 - 界面截图与演示动图摄于上一个构建（画面水印 `v0.1.0.free.468`）——两次构建之间无功能改动，与本次发布一致
 
+## uBurnInTest — 整机老化与验收工具（二进制发布包）
+
+运行在 **UEFI Shell** 中的图形化整机压力测试与老化验收工具，在系统启动之前工作——机箱还没装系统、驱动栈还没起来的时候，测到的是"这台机器本身"，而不是"OS 接管之后的样子"。**整机而不是单点**：十个压力项同时压 CPU、内存、存储、显存、缓存、SIMD、随机事务内存、磁盘随机寻道、PCIe 链路与多核同步，每一项写进去再读回来逐字节比对；开机默认待命，按空格才开始。六类视图里有坏点色卡和**核间延迟矩阵**（N×N 热力图，格内直接读单程纳秒数）；跑完落盘文本 / HTML 报告、可打印证书，还能导出基线快照与多机批量汇总。
+
+![uBurnInTest 主窗口](uBurnInTest/docs/manual/images/01_main_window.png)
+
+- 版本：0.1.0（Build 424，2026-11-19）｜ 作者：Mike Wu（mikewuping@163.com）
+- **下载**：`uBurnInTest/binaries/uBurnInTest.efi`（约 2.3 MB，UEFI x64 应用）；`uBurnInTest/uBurnInTest-0.1.0.424+20261119_140827.zip`（便捷包：程序 + 手册 + 截图与演示动图）；本版不做 ISO
+- 详见 [uBurnInTest 说明](uBurnInTest/README.md) ｜ [产品手册（MD / HTML / Word）](uBurnInTest/docs/manual/uBurnInTest-产品手册.md) ｜ [功能演示 GIF](uBurnInTest/docs/manual/uBurnInTest-演示.gif)
+- **许可**：个人用户免费使用；商业用途需联系作者书面授权。**非开源，仓库内不含任何源码**
+
 ## 兄弟项目 / Sister Projects
 
 - [gudumpinfo](https://github.com/MikeWuPing/gudumpinfo) —— UEFI Shell 图形化系统信息查看器：Handle/协议中心/内存/ACPI/CPUID/MSR/Event-Timer/DEPEX 等 20 类固件底层信息（X64/AArch64）
@@ -130,6 +143,7 @@
 
 ## 变更记录 / Changelog
 
+- **2026-11-19 · uBurnInTest-v0.1.0.424**：uBurnInTest 二进制发布首版（0.1.0 Build 424）——十个整机压力模块、六类视图（含核间延迟矩阵）、文本 / HTML 报告与可打印证书、基线与批量汇总、`UBIT_CFG.TXT` 无人值守多轮；矩阵改为 1..N 序号坐标轴与格内纳秒数。只发布二进制与手册，源码不公开；个人用户免费，商用需联系作者。
 - **2026-11-15 · AdvMemTest-v0.2.2.916**：AdvMemTest 增量版（Build 916，免费版发布）——Free 新增 TM5 配置导入、F6 热键快照、测试配置与四档预设、四菜单/800×600 适配、健康卡 ECC 口径与会话趋势 STOPPED；Pro 补 `ecc path:` 取证、Intel Server IMC CLTT 温度、SPD 位宽 0/1 基对账。公仓只发布 Free 二进制，Pro/Site/源码不随本仓发布。
 - **2026-11-03 · AdvMemTest-v0.1.7.810**：AdvMemTest 增量版（Build 810）——**2R x4 服务器条整条 40 颗粒显示 + 点击/悬停详情 + 32 槽 × 40 颗粒报告布局**；**800×600 紧凑档颗粒条、槽名与错误日志重叠修复**；`ADVERR.CSV` 改为起测即逐条流式追加全部 pattern 错误（不再只存报告快照）；设置菜单新增“报告与日志…”（免费版可开启 `PROGRESS.LOG`）；报告拓扑核对、320×150 DIMM 卡片、256KB 报告缓冲与 CE PASS 琥珀徽章。Pattern 集合不变（免费版 16 条可执行 / 14 条可见 / 13 条默认）。
 - **2026-10-14 · AdvDiskTest-v0.1.0.469**：AdvDiskTest 入列套件（二进制 + 免 Shell 直启 ISO + 产品手册 + 功能截图与演示动图）——UEFI 原生硬盘检测：设备识别（NVMe Identify / ATA IDENTIFY）、健康与磨损双轴判定（档位 + 依据与来源，含"无法判定"）、PCIe 链路降级判定（盘能力 / 槽能力 / 实况三方对照，六档）、全盘只读表面扫描与逐区域速度剖面（含链路参照线）、设备自检（NVMe Device Self-test / ATA SMART 离线自检——盘自己跑，不破坏数据）、错误日志（NVMe 错误日志页 / ATA 错误日志，按成因归类）、容量核验（含扩容盘识别：只读档 + 可选的有界写验证档）、单文件 HTML 报告导出；首发即带免 Shell 可直启 ISO（El Torito + 内嵌 ESP）。专业版功能（无人值守与批量、老化与耐久循环、判定引擎、结构化归档与签名、完整 PCIe 拓扑树与 AER 详情）为 **Pro 专有——请联系作者获取授权**。
@@ -163,6 +177,7 @@ The binary release repository of UEFI hardware diagnostics, testing and repair-a
 | [UefiEraser](UefiEraser/) | A GUI disk-data shredder: before any operating system boots, overwrite a whole physical disk, a single partition or a volume's free space irreversibly — 12 industry-standard algorithms (DoD 5220.22-M / ECE, Gutmann 35, Schneier, HMG IS5, RCMP TSSIT OPS-II, VSITR, GOST P50739-95, AR 380-19, USAF 5020, custom N passes), optional last-pass read-back verification, safety gates (read-only devices and the boot volume cannot be selected; summary confirmation; a typed ERASE; the capacity total for whole disks), text report and CSV audit log, and a post-erase re-scan that drops partitions the medium no longer has. Full keyboard workflow, Chinese UI. The Free edition is MIT open source; device-level erase (ATA Secure Erase / NVMe Format NVM / NVMe Sanitize) and 18 further algorithms belong to the commercial Pro edition | [README](UefiEraser/README.md) ｜ [Product manual](UefiEraser/docs/manual/UefiEraser-产品手册.md) |
 | [uwinunlocker](uwinunlocker/) | A GUI **offline Windows local-account password reset** tool (PCUnlocker / PassFab / chntpw class): before any OS boots it lists **every Windows installed on the machine** with a three-valued verdict (resettable / not resettable / **undecidable**), then clears the selected account's password — or "enable and reset" for the built-in `Administrator`. No need to boot Windows, no old password, no network; it does **not** replace `sethc.exe`, touch the boot chain, or modify any executable on the system. **Reads the volume's dirty flag before writing** (a hard power-off, or a "shutdown" taken with Fast Startup on, is refused) and **reads the file back byte for byte afterwards**; BitLocker volumes, Microsoft accounts and domain accounts are stated as unsupported with the specific blocker named. Liquid-glass UI, simplified Chinese, `Tab` focus ring + `Esc` from any stop, **the whole workflow without a mouse**; shell-free bootable ISO. Free for personal use | [README](uwinunlocker/README.md) ｜ [Product manual](uwinunlocker/docs/manual/README.md) |
 | [AdvDiskTest](AdvDiskTest/) | A GUI disk and SSD diagnostics tool (native UEFI, no operating system): device identification (NVMe / ATA) + health and wear graded on two independent axes (each grade with its evidence and provenance) + PCIe link-degradation verdicts (drive capability vs slot capability vs negotiated state, six grades) + a read-only full-surface scan with a per-region speed profile + device self-tests (non-destructive) + error logs + capacity verification (fake-capacity / over-provisioned drives) + single-file HTML report export; shell-free bootable ISO | [README](AdvDiskTest/README.md) ｜ [Product manual](AdvDiskTest/docs/manual/advdisktest-free-user-guide.md) |
+| [uBurnInTest](uBurnInTest/) | A GUI whole-machine burn-in & acceptance tool for the UEFI Shell (before any OS boots): ten stress items at once (CPU, memory, storage, frame buffer, caches, SIMD, random-transaction memory, random disk seeking, PCIe link, multi-core synchronisation), each written and read back byte for byte; six views including a core-to-core latency heat map with nanoseconds in every cell; text and HTML reports, printable certificates, baselines and multi-machine summaries; unattended multi-loop runs via `UBIT_CFG.TXT`. Free for personal use, not open source | [README](uBurnInTest/README.md) ｜ [Product manual](uBurnInTest/docs/manual/uBurnInTest-产品手册.md) |
 
 ## pcDig — Hardware Diagnostics Toolkit
 
@@ -248,6 +263,17 @@ A native GUI disk and SSD diagnostics tool for **UEFI** (the UEFI Shell, or a sh
 - See the [AdvDiskTest README](AdvDiskTest/README.md) ｜ [Free user manual (MD/Word)](AdvDiskTest/docs/manual/advdisktest-free-user-guide.md) ｜ [feature GIF](AdvDiskTest/docs/manual/advdisktest-feature-tour.gif)
 - Screenshots and the demo GIF were captured from the previous build (watermark `v0.1.0.free.468`) — the same functionality after a rebuild
 
+## uBurnInTest — Whole-Machine Burn-in & Acceptance Tool (Binary Release)
+
+A GUI whole-machine stress and acceptance tool running in the **UEFI Shell**, before any operating system boots: what you measure is the machine itself, not the machine after an OS has taken over. **Whole machine, not one point** — ten stress items hammer the CPU, memory, storage, frame buffer, caches, SIMD, random-transaction memory, random disk seeking, the PCIe link and multi-core synchronisation at once; every item writes data, reads it back and compares it byte for byte. The machine idles until the operator presses `Space`. Six views include a dead-pixel colour chart and a **core-to-core latency matrix** (N x N heat map, one-way nanoseconds in each cell); reports, printable certificates, baseline snapshots and fleet summaries are written to the boot volume.
+
+![Main window](uBurnInTest/docs/manual/images/01_main_window.png)
+
+- Version: 0.1.0 (Build 424, 2026-11-19) | Author: Mike Wu (mikewuping@163.com)
+- **Download**: `uBurnInTest/binaries/uBurnInTest.efi` (~2.3 MB, UEFI x64); `uBurnInTest/uBurnInTest-0.1.0.424+20261119_140827.zip` (convenience package: binary + manual + screenshots and animation); no ISO in this release
+- See [uBurnInTest README](uBurnInTest/README.md) ｜ [Product manual (MD / HTML / Word)](uBurnInTest/docs/manual/uBurnInTest-产品手册.md) ｜ [Feature tour GIF](uBurnInTest/docs/manual/uBurnInTest-演示.gif)
+- **Licence**: free for personal use; commercial use requires written authorisation from the author. **Not open source — this repository contains no source code**
+
 ## Sister Projects
 
 - [gudumpinfo](https://github.com/MikeWuPing/gudumpinfo) — a GUI system-info viewer for the UEFI Shell: handles, protocols center, memory, ACPI, CPUID, MSR, Event/Timer, DEPEX — 20+ firmware views (X64/AArch64)
@@ -262,6 +288,7 @@ Sister tooling (cross-linked inside pcDig): the memory specialist tool **AdvMemT
 
 ## Changelog
 
+- **2026-11-19 · uBurnInTest-v0.1.0.424**: first binary release (0.1.0 Build 424) — ten whole-machine stress modules, six views (including the core-to-core latency matrix), text and HTML reports with printable certificates, baselines and fleet summaries, and unattended multi-loop runs through `UBIT_CFG.TXT`. The matrix now uses 1..N axis ordinals with nanoseconds inside the cells; the manual is updated to match. Binaries and documentation only, no source published; free for personal use, commercial use requires authorisation.
 - **2026-11-15 · AdvMemTest-v0.2.2.916**: AdvMemTest incremental release (Build 916, Free binary published) — Free adds TestMem5 config import, F6 snapshot, richer test configuration and four presets, four-menu/800x600 adaptation, ECC-only health-card semantics and STOPPED session trends; Pro adds `ecc path:` evidence, Intel Server IMC CLTT temperature and SPD-width 0/1-based DimmId reconciliation. The public repository carries the Free binary only; Pro/Site/source are not published here.
 - **2026-11-03 · AdvMemTest-v0.1.7.810**: incremental release (Build 810) — **full 40-DRAM 2R x4 server-DIMM view with click/hover detail and a 32-slot × 40-DRAM report layout**; **800×600 compact-strip, slot-label and error-log overlap fixes**; `ADVERR.CSV` now streams every pattern error from test start (no longer a 64-row report snapshot); a new "Reports & Logs" settings dialog (the Free edition can enable `PROGRESS.LOG`); topology cross-check, 320×150 DIMM cards, a 256 KB report buffer and an amber PASS badge on ECC CE. The pattern set is unchanged (Free: 16 executable / 14 visible / 13 default).
 - **2026-10-14 · AdvDiskTest-v0.1.0.469**: AdvDiskTest joins the suite (binary + shell-free bootable ISO + product manual + screenshots and a feature-tour animation) — native UEFI disk diagnostics: device identification (NVMe Identify / ATA IDENTIFY), health and wear graded on two independent axes (each grade with its evidence and provenance, including an explicit "undecidable"), PCIe link-degradation verdicts (drive capability vs slot capability vs negotiated state, six grades), a read-only full-surface scan with a per-region speed profile (link reference line included), device self-tests (NVMe Device Self-test / ATA SMART offline — run by the drive itself, non-destructive), error logs (NVMe Error Information Log / ATA error log, grouped by cause), capacity verification (fake-capacity detection; a read-only tier plus an optional bounded-write tier) and single-file HTML report export; the first release already ships a shell-free bootable ISO (El Torito + embedded ESP). The Pro edition adds unattended / batch operation, aging and endurance loops, a rule engine, and structured archiving with report signing — contact the author for licensing.

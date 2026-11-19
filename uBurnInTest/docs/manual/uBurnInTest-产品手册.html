@@ -1,0 +1,1202 @@
+<!DOCTYPE html><html lang='zh-CN'><head><meta charset='utf-8'><title>uBurnInTest 产品手册</title><style>
+@page { size: A4; margin: 2.2cm 2cm; }
+body { font-family: "Microsoft YaHei", "Segoe UI", SimSun, sans-serif;
+       font-size: 10.5pt; line-height: 1.75; color: #23262D; }
+h1 { font-size: 24pt; color: #14508C; border-bottom: 3px solid #14508C;
+     padding-bottom: 10px; margin-top: 0; }
+h2 { font-size: 16pt; color: #14508C; border-bottom: 1px solid #C9D8E8;
+     padding-bottom: 5px; margin-top: 26px; }
+h3 { font-size: 12.5pt; color: #1F6FEB; margin-top: 18px; }
+p  { margin: 7px 0; text-align: justify; }
+a  { color: #1F6FEB; text-decoration: none; }
+strong { color: #12395F; }
+code { font-family: Consolas, "Courier New", monospace; font-size: 9pt;
+       background: #F2F4F7; padding: 1px 4px; border-radius: 3px;
+       color: #A3341F; }
+pre { background: #F5F7FA; border: 1px solid #D7DEE8; border-left: 4px solid
+      #1F6FEB; border-radius: 4px; padding: 10px 12px; font-size: 9pt;
+      line-height: 1.5; white-space: pre-wrap; }
+pre code { background: none; padding: 0; color: #23262D; }
+blockquote { border-left: 4px solid #F0A742; background: #FFF8EC;
+             margin: 12px 0; padding: 8px 14px; color: #5A431F; }
+blockquote p { margin: 3px 0; }
+table { border-collapse: collapse; width: 100%; margin: 12px 0;
+        font-size: 9.5pt; }
+th { background: #14508C; color: white; text-align: left;
+     padding: 7px 9px; border: 1px solid #14508C; }
+td { padding: 6px 9px; border: 1px solid #D7DEE8; vertical-align: top; }
+tr:nth-child(even) td { background: #F7F9FC; }
+img { max-width: 100%; border: 1px solid #D7DEE8; border-radius: 3px;
+      display: block; margin: 10px auto 4px; }
+p.caption { text-align: center; color: #66707D; font-size: 9pt;
+            font-style: italic; margin: 2px 0 16px; }
+p.cellimg { margin: 0; }
+p.cellimg img { margin: 2px 0; border: 1px solid #E2E7EE; }
+ul, ol { margin: 7px 0; padding-left: 24px; }
+li { margin: 3px 0; }
+hr { border: none; border-top: 1px solid #D7DEE8; margin: 24px 0; }
+.cover { text-align: center; padding: 40px 0 20px; }
+.cover h1 { border: none; font-size: 30pt; }
+.cover .sub { color: #66707D; font-size: 12pt; }
+.cover .meta { color: #8A93A0; font-size: 9.5pt; margin-top: 24px; }
+</style></head><body><h1>uBurnInTest 产品手册</h1>
+<p><strong>pre-OS 整机压力测试与老化验收工具 · 简体中文界面 · 版本 0.1.0+400</strong></p>
+<blockquote><p>本手册所有界面截图均来自 QEMU/OVMF 上<strong>真实运行的固件</strong>，由串口断言与 QMP 键鼠注入驱动采集，非示意图、非合成图。离线产物截图来自固件实际写入 FAT 卷后提取的文件。</p></blockquote>
+<hr />
+<h2>目录</h2>
+<ol>
+<li><a href="#1-产品定位">产品定位</a></li>
+<li><a href="#2-快速开始">快速开始</a></li>
+<li><a href="#3-界面导览">界面导览</a></li>
+<li><a href="#4-十个压力测试项">十个压力测试项</a></li>
+<li><a href="#5-测试项设置">测试项设置</a></li>
+<li><a href="#6-菜单栏功能详解">菜单栏功能详解</a></li>
+<li><a href="#7-键鼠交互">键鼠交互</a></li>
+<li><a href="#8-坏点色卡">坏点色卡</a></li>
+<li><a href="#9-核间延迟">核间延迟</a></li>
+<li><a href="#10-报告与判定">报告与判定</a></li>
+<li><a href="#11-批量结果归集">批量结果归集</a></li>
+<li><a href="#12-无人值守配置与故障注入">无人值守配置与故障注入</a></li>
+<li><a href="#13-判定口径与诚实性规则">判定口径与诚实性规则</a></li>
+<li><a href="#14-部署与产物清单">部署与产物清单</a></li>
+<li><a href="#15-故障排查">故障排查</a></li>
+<li><a href="#16-附录已知边界">附录：已知边界</a></li>
+</ol>
+<hr />
+<h2>1. 产品定位</h2>
+<p>uBurnInTest 是一台<strong>在操作系统启动之前</strong>运行的整机压力测试与老化验收工具。它以</p>
+<p>UEFI Application 的形式从 U 盘启动，直接使用固件提供的协议访问硬件，不依赖</p>
+<p>任何 OS 驱动。</p>
+<p><strong>为什么必须在 pre-OS 跑</strong>：有几类硬件状态，操作系统<strong>永远看不到</strong>。最典型的是</p>
+<p>PCIe 链路的协商宽度与速率——OS 的驱动会重置链路，一条降级到 x4 的 x16 插槽</p>
+<p>在驱动接管后就"恢复"了。还有 SMBIOS/ACPI 原始表、SPD、SMART 健康日志、</p>
+<p>IA32 MCG/MCE MSR 中的可纠正错误计数。这些必须在固件阶段记录。</p>
+<p><strong>与兄弟软件的分工</strong>：本工具做整机快速验收与老化；深度内存颗粒定位用</p>
+<p>AdvMemTest，整机硬件信息汇总用 pcDig，启动故障诊断用 BootDoctor，NVRAM</p>
+<p>清理用 UefiEraser。主窗口底部常驻这条引流提示。</p>
+<p><strong>四个设计原则</strong>：</p>
+<ul>
+<li><strong>零固件改动</strong>：只依赖标准 UEFI 协议，不改 BIOS。</li>
+<li><strong>跳过即降级</strong>：任何能力缺失都记为 <code>DEGRADED</code>，绝不计为通过。</li>
+<li><strong>可机器校验</strong>：每个行为都在串口留 ASCII 证据，断言脚本可自动核对。</li>
+<li><strong>诚实</strong>：没测到的写 <code>unavailable</code>，不猜、不填 0；没跑完的绝不算通过。</li>
+</ul>
+<hr />
+<h2>2. 快速开始</h2>
+<h3>2.1 准备 U 盘</h3>
+<p>把 <code>uBurnInTest.efi</code> 放到 FAT32 U 盘，UEFI Shell 下执行即可。工具会在启动卷</p>
+<p>根目录读写下列文件（<strong>全部符合 8.3 命名</strong>）：</p>
+<table><thead><tr>
+<th>文件</th>
+<th>方向</th>
+<th>用途</th>
+</tr></thead><tbody>
+<tr>
+<td><code>UBIT.CFG</code></td>
+<td>读写</td>
+<td><strong>测试项设置的 JSON 配置文件</strong>（由「测试项设置」保存）</td>
+</tr>
+<tr>
+<td><code>UBIT_CFG.TXT</code></td>
+<td>读</td>
+<td>旧版 key=value 配置，仅作兼容回退</td>
+</tr>
+<tr>
+<td><code>UBIT_AUTO.TXT</code></td>
+<td>读</td>
+<td><strong>唯一</strong>的无人值守启动标记（仅验证/产线用）</td>
+</tr>
+<tr>
+<td><code>UBIT_INJ.TXT</code></td>
+<td>读</td>
+<td>故障注入标记（仅验证用）</td>
+</tr>
+<tr>
+<td><code>UBIT_RPT.TXT</code></td>
+<td>写</td>
+<td>纯文本运行报告</td>
+</tr>
+<tr>
+<td><code>UBIT_RPT.HTM</code></td>
+<td>写</td>
+<td>HTML 运行报告</td>
+</tr>
+<tr>
+<td><code>UBITCERT.TXT</code></td>
+<td>写</td>
+<td>可打印测试证书</td>
+</tr>
+<tr>
+<td><code>UBITBASE.TXT</code></td>
+<td>写</td>
+<td>基线快照导出</td>
+</tr>
+<tr>
+<td><code>UBITBASE.PRV</code></td>
+<td>读写</td>
+<td>上次基线（跨启动对比）</td>
+</tr>
+<tr>
+<td><code>UBIT_LOG.TXT</code></td>
+<td>写</td>
+<td>运行日志导出</td>
+</tr>
+</tbody></table>
+<h3>2.2 启动</h3>
+<p>固件启动后只采集平台基线，然后<strong>停在「待命」状态，不会自动跑测试</strong>。</p>
+<p>必须由操作员选择「压力测试 → 开始 / 继续」、按 <code>空格</code> 或按 <code>Esc</code> 才启动。</p>
+<p>默认计划时长是 <strong>4 小时</strong>（<code>04:00:00</code>），十个压力测试项默认全部启用。</p>
+<p>配置文件<strong>永远不会</strong>让测试自己开始。旧版 <code>autostart=1</code> 已被忽略；只有单独</p>
+<p>放一个 <code>UBIT_AUTO.TXT</code> 标记才会上电即跑（见第 12 节）。这样一次自动化验证</p>
+<p>留下的配置不会让下一次人工开机直接陷入四小时老化。</p>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/01_main_window.png" alt="主窗口" /></p>
+<p class="caption">图 1　启动后的主窗口：菜单栏、六张统计卡片、总进度条、可滚动的模块列表</p>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/02_run_progress.png" alt="运行进度" /></p>
+<p class="caption">图 2　运行中的进度与心跳：每个模块独立显示循环次数、错误数与百分比</p>
+<h3>2.3 最短路径</h3>
+<ol>
+<li>开机 → 界面显示「<strong>待命</strong>」（固件<strong>不会自动开跑</strong>）→ 按 <strong><code>空格</code></strong></li>
+</ol>
+<p>开始测试 → 再按一次暂停，再按一次继续。</p>
+<ol>
+<li>或按 <code>Tab</code> 走到菜单 → <code>Enter</code> 打开 → 选择需要的动作</li>
+</ol>
+<p>（「压力测试」菜单里有「开始 / 继续」「暂停」「停止」）。</p>
+<ol>
+<li>无人值守：在 FAT 卷单独放一个 <code>UBIT_AUTO.TXT</code> 标记，固件才会</li>
+</ol>
+<p>上电即跑（见第 12 节）；<code>UBIT.CFG</code> / <code>UBIT_CFG.TXT</code> 里写什么都不会。</p>
+<hr />
+<h2>3. 界面导览</h2>
+<p>界面采用深灰三层配色（<code>#1B1B1F / #26262C / #141417</code>），描边 <code>#3F3F46</code>，</p>
+<p>强调蓝 <code>#4CC2FF</code>，与兄弟项目 AdvMemTest 一致。分辨率 1280×800。</p>
+<h3>3.0 标题栏与署名</h3>
+<p>窗口最顶部是一条 24px 的<strong>标题栏</strong>：</p>
+<ul>
+<li>左侧：应用名 <code>uBurnInTest - 整机压力测试与老化验收</code>；</li>
+<li>右侧：<strong>作者：Mike Wu</strong>。</li>
+</ul>
+<p>版本字符串在<strong>底部状态栏右侧</strong>——两者分居窗口的对角，正好是早期设计稿</p>
+<p>定的位置。标题栏下面依次是菜单栏、六张统计卡片、总进度条、十个压力测试项</p>
+<p>列表，最底下是状态栏。</p>
+<h3>3.1 菜单栏与退出</h3>
+<p>标题栏之下是菜单栏，依次为 <strong>文件 / 压力测试 / 视图 / 报告 / 帮助</strong>，最右侧是</p>
+<p><strong>常驻可见的「退出」按钮</strong>。退出按钮是独立焦点位，<code>Tab</code> 五步即可到达——产线操作员不该</p>
+<p>先猜"退出藏在文件菜单里"。</p>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/27_exit_focus.png" alt="退出按钮获得焦点" /></p>
+<p class="caption">图 3　<code>Tab</code> 在菜单栏的焦点位之间移动，当前按钮显示焦点环；最右侧「退出」常驻可见</p>
+<h3>3.2 统计卡片</h3>
+<p>六张卡片常驻顶部：<strong>运行时长、错误总数、压力测试项、运行状态、温度、CPU 占用</strong>。</p>
+<p>温度在 QEMU 上显示「不可用」——这是诚实的能力缺失标记，不是 0 度。</p>
+<p>六张卡片<strong>全部每秒刷新</strong>。运行时长是<strong>跨轮累计</strong>的测试时间（多轮配置下不会</p>
+<p>在新一轮开始时归零）；不足一小时显示 <code>mm:ss</code>，达到或超过一小时自动切换为</p>
+<p><code>hh:mm:ss</code>（四小时计划显示 <code>04:00:00</code>，而不是 <code>240:00</code>）；运行状态在</p>
+<p><code>待命 / 运行中 / 已暂停 / 已完成 / 已停止 / 就绪</code> 之间切换——</p>
+<p><strong>「待命」表示固件刚启动、还没有人按下开始键</strong>（按 <code>空格</code> 或 <code>Esc</code> 开始）；</p>
+<p>压力测试项在某个模块探测失败被</p>
+<p>跳过时显示 <code>可用数/总数</code>（例如 <code>9/10</code>），提示那一项并未参与测试。</p>
+<p>第 6 张「CPU 占用」显示<strong>一个</strong>百分比，未运行时显示 <code>--</code>。口径是<strong>全机利用率</strong>：</p>
+<p>分子是 BSP 在 <code>RunSlice()</code> 里花的 TSC <strong>加上</strong>每个 AP 在自己过程里测得的 TSC</p>
+<p>（AP 侧<strong>实时</strong>自测上报，见下），分母是采样窗口 TSC × 已启用核数。</p>
+<p>所以「所有核整窗都在忙」= 100%，「四核中一核在忙」= 25%。串口另有低频行</p>
+<p><code>[App] cpu_util_pct=NN cores=N</code>。</p>
+<p><strong>正常读数是 80%~100%</strong>。低于 60% 说明机器没有被真正压满，需要查原因</p>
+<p>（典型原因：某个模块的负载没跑满整个切片，或多核派发被拒绝）。这是一条</p>
+<p><strong>验收指标</strong>，不是装饰性读数。</p>
+<p>计量口径的实现细节（这些是踩过的坑，不要改回去）：</p>
+<ul>
+<li><strong>AP 侧必须实时上报忙时</strong>，不能等整轮跑完再一次性上报。一次性上报会把</li>
+</ul>
+<p>好几秒的活压进一个 1 秒的统计窗口，读数在 12% 和 100% 之间剧烈震荡，</p>
+<p>而机器其实一直是满载的。</p>
+<ul>
+<li>统计窗口是<strong>滑动窗口</strong>（4 个 1 秒桶求和），不是翻滚窗口。翻滚窗口无法</li>
+</ul>
+<p>反映比采样周期更快变化的负载。</p>
+<ul>
+<li>AP 的忙时按<strong>处理器分槽</strong>累计（每个核写自己那一格），因为本工程链接的</li>
+</ul>
+<p>库集里没有可移植的 64 位原子加。</p>
+<blockquote><p>旧版本这里是 <code>NN% / NN%</code>（忙 / 闲）。忙与闲恒和为 100，等于同一个信息说 两遍；而且当时只统计 BSP 主线程，多核模块把负载派发给 AP 之后，即使四核 全满也只显示 3%。现在改为单值、全机口径。</p></blockquote>
+<h3>3.3 压力测试项区</h3>
+<p>十个模块各有独立进度条、轮次、错误数、本轮百分比。区域可滚动，右侧有滚动条。</p>
+<p>底部常驻引流提示与版本水印（版本号带构建时间戳，用于确认跑的确实是新固件）。</p>
+<p><strong>百分比是本轮进度，不是整个测试的完成度。</strong> 老化测试按时长（<code>DurationSeconds</code>）</p>
+<p>结束，没有「总共要做多少」这个总量，因此每个模块只能报告「本轮做了百分之几」：</p>
+<p>一轮是它自己的固定工作量（CPU 200 万次迭代、SIMD 4096 个用例、内存一整遍扫描</p>
+<p>……），一轮走完百分比归零、轮次 +1，进度条因此会「走到头再走回来」。</p>
+<p>这是<strong>存活指示</strong>，不是完成度——条不动才说明卡住了。</p>
+<p>整个测试的真实完成度在顶部「总进度」条：<code>已运行 / 计划总时长</code>（多轮时计划总</p>
+<p>时长 = 单轮时长 × 轮数），右侧同步显示 <code>mm:ss / mm:ss</code>。</p>
+<hr />
+<h2>4. 十个压力测试项</h2>
+<table><thead><tr>
+<th>#</th>
+<th>模块</th>
+<th>检查内容</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td>CPU 压力测试</td>
+<td>多核压力运算 → 校验和<strong>与期望值比对</strong>（算错即判定）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>内存压力测试</td>
+<td>多 pattern <strong>写入 → 读回 → 逐字比对</strong>，定位错误</td>
+</tr>
+<tr>
+<td>3</td>
+<td>存储压力测试</td>
+<td>非启动盘块 <strong>写入 → 读回比对 → 恢复原内容</strong>（<strong>启动盘永不写入</strong>）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>显存校验</td>
+<td>GOP 帧缓冲写入 → <strong>逐像素读回比对</strong> → 恢复</td>
+</tr>
+<tr>
+<td>5</td>
+<td>缓存压力</td>
+<td>自有 4..32 MiB 缓冲区，轮换 stride 与 L1/L2/L3 工作集 → <strong>逐行写入后读回比对</strong></td>
+</tr>
+<tr>
+<td>6</td>
+<td>浮点 SIMD 压力</td>
+<td>CPUID 分级选标量/SSE/AVX 做矩阵乘向量 → 结果<strong>按位精确或前向误差界比对</strong>；MP Services 多核派发</td>
+</tr>
+<tr>
+<td>7</td>
+<td>随机事务内存压力</td>
+<td>可复现 PRNG（固定 seed）决定地址/长度/pattern/读写顺序 → 每块 <strong>CRC32 校验</strong>，失败可定位到具体事务；seed 写进日志</td>
+</tr>
+<tr>
+<td>8</td>
+<td>磁盘随机寻道压力</td>
+<td>跨盘头/盘尾的大跨度随机 LBA，<strong>保存 → 写入 → 读回 → 恢复 → 再验证</strong>；<strong>仅非启动盘</strong>，启动盘按设备路径结构识别两次</td>
+</tr>
+<tr>
+<td>9</td>
+<td>PCIe 重训练压力</td>
+<td>反复触发根端口 Retrain Link → 每次校验链路回到初始协商宽度与速率；等待分散到时间片，不阻塞 1ms 事件泵；QEMU 无 PCIe capability 时降级 <code>module-pcie-unavailable</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td>多核同步压力</td>
+<td>自有 <code>EfiBootServicesData</code> 邮箱每核一格，<code>StartupAllAPs</code> 非阻塞派发 → 栅栏后写己格、交叉读邻格，BSP <strong>逐格独立重算期望值比对</strong>，检出丢核/撕裂/乱序；<code>Probe()</code> 缺 MP Services 或单核则降级</td>
+</tr>
+</tbody></table>
+<p>后 6 项（缓存、浮点 SIMD、随机事务内存、磁盘随机寻道、PCIe 重训练、多核</p>
+<p>同步）是本次扩充的真压力模块：它们同样各自遵循「写入 → 读回 → 比对」，</p>
+<p>不是开机只读一遍状态就交差——缓存逐行写后读回、SIMD 把矩阵乘向量的结果</p>
+<p>与期望值比对、随机事务内存逐块 CRC32 校验、寻道把原块保存后写入读回再恢复</p>
+<p>复验、PCIe 每次重训练都校验链路协商值、多核同步在栅栏后交叉读邻格并重算</p>
+<p>期望值比对。能力缺失时 <code>Probe()</code> 如实降级，绝不把「没测」记成「通过」。</p>
+<p>引擎里只保留这 10 个<strong>真压力</strong>模块：每一项都往硬件里写、再读回来比对。原本</p>
+<p>的 4 个只读项（引擎自检、网络自检、USB 自检、串口自检）不产生负载，已降级为</p>
+<p><code>PlatformProbe</code> 的<strong>开机基线</strong>——开机采集一次、写进 <code>UBITBASE.TXT</code> 与报告，</p>
+<p>不再出现在运行视图里。</p>
+<p><strong>第 4 个模块的读回是重点</strong>：只写不读证明不了任何事——一个忽略写入的帧缓冲</p>
+<p>和一个健康的帧缓冲，在写完的那一刻长得一模一样。不符的像素就是坏点，计入</p>
+<p>错误并出现在报告里。</p>
+<p><strong>显存压力特意用小块</strong>（8×8）。帧缓冲访问不是内存访问：真机上显示缓冲通常在</p>
+<p>PCI 桥后面，<strong>每个像素都是一次事务</strong>。实测 64×64 的块会把整机拖垮；压力来自</p>
+<p>"做很多次、覆盖很多地方"，不是"一次做很大"。</p>
+<p><strong>协议能力缺失不等于通过</strong>：开机基线里 SNP/UsbIo/SerialIo 任一项读不到时，</p>
+<p>同样登记为 <code>DEGRADED</code> 并在报告里写明原因，绝不显示成"跑了 0 错误"。</p>
+<hr />
+<h2>5. 测试项设置</h2>
+<p>「压力测试 → 测试项设置」打开对话框。所有行都能用键盘到达，<code>Tab</code> / <code>Shift+Tab</code></p>
+<p>循环，<code>Enter</code> 切换或激活，<code>Esc</code> 关闭。十个压力测试项<strong>默认全部启用</strong>，操作员</p>
+<p>可逐项停用；调度器会完全跳过停用项。全停用的配置会被拒绝——空跑绝不能被</p>
+<p>报成通过。</p>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/05_settings.png" alt="测试项设置对话框" /></p>
+<p class="caption">图 4　测试项设置：压力时长、十个模块开关（右侧显示稳定 id）、负载占空比、循环次数、保存并应用、取消</p>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/06_settings_changed.png" alt="修改后的设置" /></p>
+<p class="caption">图 5　点击「压力时长」在人类可读档位间循环：10 秒 / 30 秒 / 1 分 / 5 分 / 15 分 / 30 分 / 1 小时 / 2 小时 / 4 小时 / 8 小时 / 12 小时 / 24 小时</p>
+<p>可配置项：</p>
+<table><thead><tr>
+<th>项</th>
+<th>默认值</th>
+<th>说明</th>
+</tr></thead><tbody>
+<tr>
+<td>压力时长</td>
+<td><strong>4 小时</strong></td>
+<td>点击在 10 秒 ~ 24 小时的 12 个档位间循环；最大 24 小时</td>
+</tr>
+<tr>
+<td>十个模块开关</td>
+<td>全启用</td>
+<td>点击切换；右侧同时显示写入配置文件的稳定 id（如 <code>cpu</code>）</td>
+</tr>
+<tr>
+<td>负载占空比</td>
+<td>100</td>
+<td>25 / 50 / 75 / 100 切换</td>
+</tr>
+<tr>
+<td>循环次数</td>
+<td>1</td>
+<td>1..24；<code>loops=N</code> 跑 N 轮，每轮引擎真正重启</td>
+</tr>
+<tr>
+<td>保存并应用</td>
+<td>—</td>
+<td>写回 <code>UBIT.CFG</code> 并应用到本次会话</td>
+</tr>
+<tr>
+<td>取消</td>
+<td>—</td>
+<td>放弃修改</td>
+</tr>
+</tbody></table>
+<p><strong>保存格式</strong>：一个 <code>.cfg</code> 扩展名的 <strong>JSON 文档</strong>，写在启动 FAT 卷根目录的</p>
+<p><code>UBIT.CFG</code>：</p>
+<pre><code>{
+  &quot;version&quot;: 1,
+  &quot;durationSeconds&quot;: 14400,
+  &quot;duty&quot;: 100,
+  &quot;loops&quot;: 1,
+  &quot;enabled&quot;: [1,1,1,1,1,1,1,1,1,1],
+  &quot;modules&quot;: [&quot;cpu&quot;,&quot;memory&quot;,&quot;storage&quot;,&quot;gop&quot;,&quot;cache&quot;,&quot;simd&quot;,&quot;randmem&quot;,&quot;seek&quot;,&quot;pcie&quot;,&quot;smp&quot;]
+}</code></pre>
+<p><code>modules</code> 为每个开关提供稳定 id，手工编辑文件时不必猜引擎注册顺序。文件里</p>
+<p><strong>没有</strong> <code>autoStart</code> 字段：设置文档无权让机器一上电就开跑。旧版</p>
+<p><code>UBIT_CFG.TXT</code> 仍会被读取，但只作为 <code>UBIT.CFG</code> 不存在时的兼容回退；其中的</p>
+<p><code>autostart=1</code> 已被忽略。保存成功后弹窗会明确写出文件名，并提示「开机始终</p>
+<p>待命，需手动选择开始」。</p>
+<p>对话框高度由行数<strong>派生</strong>（<code>40 + 行数×38 + 18</code>）：现在 10 个模块对应 15 行</p>
+<p>（时长、10 个模块开关、占空比、轮次、保存、取消），卡片高度仍不溢出；</p>
+<p>以后再增加模块也不会把「保存并应用」挤出可视区。</p>
+<p><strong>一次按键只执行一次动作</strong>：键盘 <code>Enter</code> 由 LVGL 的 <code>LV_EVENT_CLICKED</code></p>
+<p>统一派发，与鼠标点击走同一条路径。早期版本在按键回调里额外手动激活一次，</p>
+<p>导致「停用某模块」立刻被第二次激活改回启用、保存出来的永远是默认全选，</p>
+<p>且一次保存会写两次文件并弹两个确认框。该问题已在串口上用</p>
+<p><code>CONFIG_SAVE_LINES=1</code> 与非默认 <code>enabled</code> 数组复验。</p>
+<hr />
+<h2>6. 菜单栏功能详解</h2>
+<h3>6.1 文件</h3>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/03_menu_file.png" alt="文件菜单" /></p>
+<p class="caption">图 6　文件下拉：导出基线快照、保存运行日志、HTML 报告、测试证书、退出</p>
+<table><thead><tr>
+<th>项</th>
+<th>动作</th>
+<th>弹窗截图</th>
+</tr></thead><tbody>
+<tr>
+<td>导出基线快照</td>
+<td>写 <code>UBITBASE.TXT</code></td>
+<td class="cellimg"><img src="D:/Work/Code/uBurnInTest/docs/manual/images/14_export_baseline.png" alt="" /></td>
+</tr>
+<tr>
+<td>保存运行日志</td>
+<td>写 <code>UBIT_LOG.TXT</code></td>
+<td class="cellimg"><img src="D:/Work/Code/uBurnInTest/docs/manual/images/15_save_log.png" alt="" /></td>
+</tr>
+<tr>
+<td>HTML 报告</td>
+<td>写 <code>UBIT_RPT.HTM</code></td>
+<td class="cellimg"><img src="D:/Work/Code/uBurnInTest/docs/manual/images/16_html_report.png" alt="" /></td>
+</tr>
+<tr>
+<td>测试证书</td>
+<td>写 <code>UBITCERT.TXT</code></td>
+<td class="cellimg"><img src="D:/Work/Code/uBurnInTest/docs/manual/images/17_certificate.png" alt="" /></td>
+</tr>
+</tbody></table>
+<p class="caption">图 7–10　四个导出动作执行后各自弹出确认框</p>
+<h3>6.2 压力测试</h3>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/04_menu_test.png" alt="压力测试菜单" /></p>
+<p class="caption">图 11　压力测试下拉：开始/继续、暂停、停止、测试项设置</p>
+<ul>
+<li><strong>暂停</strong>：冻结引擎，状态卡显示暂停。<img src="D:/Work/Code/uBurnInTest/docs/manual/images/28_paused.png" alt="暂停" /></li>
+<li><strong>继续</strong>：从暂停处恢复。<img src="D:/Work/Code/uBurnInTest/docs/manual/images/29_resumed.png" alt="继续" /></li>
+<li><strong>停止</strong>：立即结束，按 <code>INCOMPLETE</code> 落报告。<img src="D:/Work/Code/uBurnInTest/docs/manual/images/30_stopped.png" alt="停止" /></li>
+</ul>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/31_after_stop.png" alt="停止后" /></p>
+<p class="caption">图 12–15　暂停、继续、停止的确认框，以及停止后的主窗口</p>
+<blockquote><p><strong>停止绝不算通过</strong>：中途停止的运行 <code>completed=no</code>，判定为 <code>INCOMPLETE</code>， 报告如实记录完成了几轮。</p></blockquote>
+<h3>6.3 视图</h3>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/07_menu_view.png" alt="视图菜单" /></p>
+<p class="caption">图 16　视图下拉：压力测试进度、硬件状态、统计卡片、坏点色卡</p>
+<p>前三项是常驻视图的说明页；第四项打开<strong>坏点色卡</strong>（见第 8 节），第五项</p>
+<p>打开<strong>核间延迟</strong>矩阵（见第 9 节）。</p>
+<h3>6.4 报告</h3>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/09_menu_report.png" alt="报告菜单" /></p>
+<p class="caption">图 17　报告下拉：本次运行摘要、降级原因、基线对比、关于报告</p>
+<table><thead><tr>
+<th>项</th>
+<th>弹窗</th>
+</tr></thead><tbody>
+<tr>
+<td>本次运行摘要</td>
+<td class="cellimg"><img src="D:/Work/Code/uBurnInTest/docs/manual/images/10_run_summary.png" alt="" /></td>
+</tr>
+<tr>
+<td>降级原因</td>
+<td class="cellimg"><img src="D:/Work/Code/uBurnInTest/docs/manual/images/18_degradations.png" alt="" /></td>
+</tr>
+<tr>
+<td>基线对比</td>
+<td class="cellimg"><img src="D:/Work/Code/uBurnInTest/docs/manual/images/19_baseline_compare.png" alt="" /></td>
+</tr>
+<tr>
+<td>关于报告</td>
+<td class="cellimg"><img src="D:/Work/Code/uBurnInTest/docs/manual/images/20_about_report.png" alt="" /></td>
+</tr>
+</tbody></table>
+<p class="caption">图 18–21　报告菜单四个信息页</p>
+<p><strong>基线对比</strong>会把本次硬件基线与上一次启动的 <code>UBITBASE.PRV</code> 比较，并按序列号</p>
+<p>绑定，能发现"内存条被换过""ACPI 表被改过"这类配置变更。</p>
+<h3>6.5 帮助</h3>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/11_menu_help.png" alt="帮助菜单" /></p>
+<p class="caption">图 22　帮助下拉：关于 uBurnInTest、兄弟软件、按键说明</p>
+<table><thead><tr>
+<th>项</th>
+<th>弹窗</th>
+</tr></thead><tbody>
+<tr>
+<td>关于 uBurnInTest</td>
+<td class="cellimg"><img src="D:/Work/Code/uBurnInTest/docs/manual/images/12_about.png" alt="" /></td>
+</tr>
+<tr>
+<td>兄弟软件</td>
+<td class="cellimg"><img src="D:/Work/Code/uBurnInTest/docs/manual/images/21_sibling_software.png" alt="" /></td>
+</tr>
+<tr>
+<td>按键说明</td>
+<td class="cellimg"><img src="D:/Work/Code/uBurnInTest/docs/manual/images/22_key_guide.png" alt="" /></td>
+</tr>
+</tbody></table>
+<p class="caption">图 23–25　帮助菜单三个信息页</p>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/23_main_after_exports.png" alt="导出后的主窗口" /></p>
+<p class="caption">图 26　完成一轮菜单操作后返回主窗口</p>
+<hr />
+<h2>7. 键鼠交互</h2>
+<h3>7.1 键盘</h3>
+<table><thead><tr>
+<th>键</th>
+<th>行为</th>
+</tr></thead><tbody>
+<tr>
+<td><code>Tab</code> / <code>Shift+Tab</code></td>
+<td>在焦点位之间前/后移动（含菜单栏、下拉项、对话框行、退出按钮）</td>
+</tr>
+<tr>
+<td><code>Enter</code></td>
+<td>打开下拉 / 激活当前项 / 切换设置值</td>
+</tr>
+<tr>
+<td><strong><code>空格</code></strong></td>
+<td><strong>运行控制：待命→开始、运行中→暂停、已暂停→继续</strong></td>
+</tr>
+<tr>
+<td><strong><code>Esc</code></strong></td>
+<td><strong>运行控制：运行中→暂停、已暂停→继续</strong>；没有弹窗时也可用于关闭下拉 / 对话框 / 消息框 / 色卡页</td>
+</tr>
+<tr>
+<td>上下方向键</td>
+<td>在下拉项之间移动</td>
+</tr>
+</tbody></table>
+<p>下拉项有<strong>独立的焦点组</strong>，<code>Tab</code> 能在其中逐项移动；打开下拉的那一次</p>
+<p><code>Enter</code> 会被 UI 吞掉，因此<strong>第二次 <code>Enter</code> 才选中第一项</strong>。</p>
+<blockquote><p><strong><code>空格</code> 与 <code>Esc</code> 是同一个"运行控制"动作</strong>，与兄弟软件 AdvMemTest 的 交互一致。<code>Esc</code> 的优先级链是：<strong>消息框 &gt; 下拉 &gt; 对话框 &gt; 运行控制 &gt; 空闲退出确认</strong>——所以有弹窗时 <code>Esc</code> 先关弹窗，没有弹窗时 <code>Esc</code> 才切换 运行状态。<code>空格</code> 不受弹窗影响之外的情况约束：它只在没有下拉也没有 对话框时才切换运行状态，避免误触。</p></blockquote>
+<p><strong>固件启动后处于「待命」状态，不会自动开跑。</strong> 操作员按 <code>空格</code>（或</p>
+<p><code>Esc</code>，或菜单「压力测试 → 开始 / 继续」）开始测试；再按一次暂停，再按</p>
+<p>一次继续。产线无人值守时，在 FAT 卷单独放一个 <code>UBIT_AUTO.TXT</code> 标记即可</p>
+<p>恢复「上电即跑」；配置文件（<code>UBIT.CFG</code> / <code>UBIT_CFG.TXT</code>）无论写什么都不会</p>
+<p>让测试自动开始，旧版的 <code>autostart=1</code> 已被忽略。</p>
+<h3>7.1.1 暂停是真的停</h3>
+<p><code>暂停</code> 会<strong>同时停掉 CPU 上的活</strong>：AP 上正在跑的负载会被中止，不只是把</p>
+<p>计时器冻住。机器在「已暂停」时是真的不再发热——这一点在跑满载的四核</p>
+<p>机器上尤其重要，因为操作员按下暂停键之后通常就离开工位了。</p>
+<h3>7.2 鼠标右键</h3>
+<p>在菜单栏的按钮上按右键，等同于按 <code>Enter</code> 打开该菜单的下拉。</p>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/26_right_button.png" alt="右键菜单" /></p>
+<p class="caption">图 27　在菜单栏按钮上按右键，直接弹出该菜单的下拉（图中为「视图」）</p>
+<blockquote><p>右键路径在应用层实现。移植层把 HID byte0 的 <strong>bit1</strong> 当右键（与上游 EDK2 的 <code>UsbMouseDxe</code> 一致），而 USB HID 规范里 <strong>bit2</strong> 才是右键；应用按 HID 规范读 bit2。两边约定都真实存在，移植层只暴露原始位，由调用方裁决。</p></blockquote>
+<h3>7.3 滚轮</h3>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/24_before_wheel.png" alt="滚动前" /></p>
+<p class="caption">图 28　滚动前的运行视图</p>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/25_wheel_scrolled.png" alt="滚轮事件" /></p>
+<p class="caption">图 29　滚轮事件注入后的运行视图（串口可核对 <code>wheel diff</code>）</p>
+<p>十个压力测试项采用<strong>固定 64 像素行高</strong>，总高度故意大于卡片，因此列表是</p>
+<p>真正可滚动的表格；<strong>表头与底部运行时行固定不动</strong>，滚到第十项时仍能看清</p>
+<p>列名与已运行时长。表头第三列写着「滚轮查看全部」作为可见提示。</p>
+<p>滚轮事件由 LVGL 的 <code>LV_EVENT_WHEEL</code> <strong>唯一</strong>接住并交给可滚动的运行视图；</p>
+<p>应用消费该事件后会把 <code>diff</code> 清零并停止冒泡，LVGL 默认滚动不再叠加执行。</p>
+<p>指针必须落在运行视图<strong>内部</strong>——落在空白处事件会被静默丢弃。滚动使用</p>
+<p><code>lv_obj_scroll_by_bounded()</code> 保持在合法范围内，位置不会跳回顶部。串口</p>
+<p>实测序列为 <code>scroll_y = 0 → 30 → 60 → 90 → 120</code>（该 LVGL 版本中正值表示</p>
+<p>已向下滚动），全程无回跳。</p>
+<blockquote><p>曾有三个路径同时消费一个滚轮刻度：应用轮询、自定义 wheel 回调、LVGL 默认滚动。三者方向还可能相反，表现为「滚一下又弹回顶部」。现在应用轮询 只清空移植层累加器，滚动只由事件路径负责。</p></blockquote>
+<hr />
+<h2>8. 坏点色卡</h2>
+<p>「视图 → 坏点色卡」打开色卡测试。它分<strong>两步</strong>：先弹出一个大提示对话框说明</p>
+<p>接下来会发生什么，操作员确认后才开始播放。</p>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/08_color_chart_intro.png" alt="色卡提示对话框" /></p>
+<p class="caption">图 30　色卡测试的提示对话框：图案清单、每张停留时长、按键说明、开始/取消</p>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/08_color_chart.png" alt="坏点色卡" /></p>
+<p class="caption">图 31　色卡播放：每一种图案都整屏铺满，一张一张轮流看</p>
+<h3>8.1 提示对话框：先说清楚，再开始</h3>
+<p>打开色卡<strong>不会</strong>立刻开始播放。屏幕中央先出现一个大对话框，把三件事一次</p>
+<p>讲清楚：</p>
+<ul>
+<li><strong>要放什么</strong>：完整的 26 种图案清单（八基本色 / 16 级灰阶 / 细网格 /</li>
+</ul>
+<p>交替棋盘）；</p>
+<ul>
+<li><strong>放多久</strong>：每一张停留 5 秒后自动翻到下一张；</li>
+<li><strong>怎么操作</strong>：<code>→</code> 或 <code>↓</code> 或 <code>空格</code> 立即看下一张，<code>←</code> 或 <code>↑</code> 退回上一张，</li>
+</ul>
+<p>任何时候按 <code>Esc</code> 退出。</p>
+<p>对话框还提醒要看什么：<strong>卡住不变的格子</strong>或<strong>异常色块</strong>。</p>
+<p>对话框有两个按钮：<strong>开始播放</strong>（<code>Enter</code>）和 <strong>取消</strong>（<code>Esc</code>）。选「取消」</p>
+<p>就回到主界面，什么都不会播放。</p>
+<h3>8.2 为什么是"整屏、一张一张"</h3>
+<p>坏点是<strong>像素级</strong>的缺陷：卡死的一格在 100×70 的小色块里几乎看不见，只有当</p>
+<p>那种颜色<strong>铺满整块屏</strong>、操作员把眼睛凑近看的时候，才可能发现。所以播放</p>
+<p>阶段不是"一堆色块摆在一起"，而是：</p>
+<ul>
+<li>每一种图案<strong>单独占满整屏</strong>（边缘到边缘，不留玻璃边框、不留壁纸）；</li>
+<li><strong>轮流</strong>显示，一次只显示一种，看完自动翻到下一页；</li>
+<li>底部常驻一条字幕条，说明当前是第几页、是什么图案，并<strong>重复一遍按键提示</strong></li>
+</ul>
+<p>——盯着满屏颜色的时候，操作员不该靠记忆。</p>
+<blockquote><p>早期版本把八基本色排成一行、16 级灰阶排成一条、两个网格并排放在一张 900×560 的卡片里。那是一张<strong>图例</strong>，不是一次<strong>眼测试</strong>：卡死的格子淹没在 图案之间的缝隙里，根本看不出来。现在的版本把每一种图案摊开成整屏。</p></blockquote>
+<h3>8.3 图案集（26 页）</h3>
+<table><thead><tr>
+<th>页码</th>
+<th>图案</th>
+<th>看什么</th>
+</tr></thead><tbody>
+<tr>
+<td>1 – 8</td>
+<td>八基本色：白、黄、青、绿、品红、红、蓝、黑</td>
+<td>纯色有没有偏色、有没有局部发暗</td>
+</tr>
+<tr>
+<td>9 – 24</td>
+<td>16 级灰阶，<strong>一级一页</strong></td>
+<td>卡在某一级、或随亮度漂移的单元</td>
+</tr>
+<tr>
+<td>25</td>
+<td>细网格（亮底黑线）</td>
+<td>亚像素几何、摩尔纹、线条断裂</td>
+</tr>
+<tr>
+<td>26</td>
+<td>交替棋盘（暗底亮格）</td>
+<td>与细网格互为反相：一个卡死的像素必须在其中一张是暗的、在另一张是亮的</td>
+</tr>
+</tbody></table>
+<h3>8.4 操作</h3>
+<table><thead><tr>
+<th>操作</th>
+<th>效果</th>
+</tr></thead><tbody>
+<tr>
+<td><code>Enter</code>（提示框里）</td>
+<td>开始播放</td>
+</tr>
+<tr>
+<td><code>Esc</code>（提示框里）</td>
+<td>取消，回到主界面</td>
+</tr>
+<tr>
+<td><code>→</code> / <code>↓</code> / <code>空格</code></td>
+<td>下一张</td>
+</tr>
+<tr>
+<td><code>←</code> / <code>↑</code></td>
+<td>上一张</td>
+</tr>
+<tr>
+<td>鼠标点击画面</td>
+<td>下一张</td>
+</tr>
+<tr>
+<td><code>Esc</code></td>
+<td>退出色卡，回到主界面</td>
+</tr>
+</tbody></table>
+<p>没人操作时页面<strong>每 5 秒自动翻页</strong>，整个图案集约两分钟走完——无人值守的</p>
+<p>老化机也会把整套色卡走一遍。手动按一次键会重新计时，操作员想看多久就多久。</p>
+<p><strong>为什么必须有人工页</strong>：坏点/卡点/色偏没有任何程序能发现——一个卡死的</p>
+<p>像素<strong>读回的值完全正确</strong>，只是显示出来是错的。色卡用 LVGL 对象绘制，不直接</p>
+<p>写帧缓冲，因此关闭后画面自动恢复。图案区是<strong>纯色</strong>：页码、图案名与按键提示</p>
+<p>都在底部的字幕条上，画面上不留任何外来色块，免得挡住要找的那一格。</p>
+<hr />
+<hr />
+<h2>9. 核间延迟</h2>
+<p>「视图 → 核间延迟」测量<strong>任意两个处理器之间</strong>传一根缓存行要多久，并把结果</p>
+<p>画成一张 N×N 的热力图。它和坏点色卡一样是<strong>视图</strong>，不是判定项：核间延迟高</p>
+<p>不一定是故障，它可能只是这颗 CPU 的拓扑本来如此（环形总线、双路跨片）。</p>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/08_core_latency_intro.png" alt="核间延迟提示" /></p>
+<p class="caption">图 32　核间延迟的提示对话框：测什么、怎么测、为什么要先停压测</p>
+<h3>9.1 它测的是什么</h3>
+<p>两个核在同一根缓存行上<strong>轮流写</strong>：A 写完 B 写，B 写完 A 写。这根缓存行因此</p>
+<p>必须在两个核的缓存之间来回搬一次，搬一次的时间就是一次<strong>往返</strong>；发起方用</p>
+<p>TSC 计时 N 次往返，除以 2N，得到<strong>单程延迟</strong>（纳秒）。</p>
+<p>这就是缓存一致性协议本身的代价——两个线程互相递活能有多快，最终由它决定。</p>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/08_core_latency_matrix.png" alt="核间延迟矩阵" /></p>
+<p class="caption">图 33　八核的核间延迟矩阵：纵轴 CPU 1..8，横轴用同一套编号，格内是单程纳秒数</p>
+<h3>9.2 怎么读这张图</h3>
+<ul>
+<li><strong>行</strong>是写入方，<strong>列</strong>是读取方；<code>[i][j]</code> 是 i 写到 j 读的单程延迟。</li>
+<li><strong>编号 1..N 是序号，不是 APIC ID。</strong> 矩阵把处理器按 APIC ID 从小到大排好，再从</li>
+</ul>
+<p>1 开始编号；纵轴写成 <code>CPU 1</code>…<code>CPU N</code>，横轴用同一套编号，每个编号旁边有一根短</p>
+<p>刻度线指向它那一行/列。8 核的机器编号就是 1..8，不会出现 0、2、4、6 这种跳号。</p>
+<p>（MP Services 的 <code>ProcessorNumber</code> 只是派发句柄，与物理位置无关，图上不出现。）</p>
+<ul>
+<li><strong>格子里直接写着纳秒数</strong>，数字按格子亮度自动切黑字或白字。28 个处理器时每格</li>
+</ul>
+<p>20 像素，两位数仍然放得下；再多就只画颜色，改看右侧色标。</p>
+<ul>
+<li><strong>对角线</strong>是核自己，不测，画成深灰。</li>
+<li><strong>颜色</strong>越冷（蓝）越快，越暖（红）越慢。色标按<strong>本场</strong>的最小值到最大值拉伸，</li>
+</ul>
+<p>所以两张图的颜色深浅不能横向比较——要比就看数字。</p>
+<ul>
+<li><strong>这张图不是"物理距离图"。</strong> 延迟只反映这颗芯片一致性路径的实际代价，不能</li>
+</ul>
+<p>用它反推两个核离得多远——<strong>共享同一个 L2 的那一对往往最慢</strong>（见下）。</p>
+<p>三台真机实测（单程，纳秒）：</p>
+<table><thead><tr>
+<th>平台</th>
+<th>最快的一对</th>
+<th>跨核</th>
+<th>备注</th>
+</tr></thead><tbody>
+<tr>
+<td>Emerald Rapids（2×16 核）</td>
+<td>SMT 兄弟 10</td>
+<td>96</td>
+<td>跨路最贵，图上呈两块方阵</td>
+</tr>
+<tr>
+<td>Raptor Lake（8P+12E）</td>
+<td>SMT 兄弟 4</td>
+<td>约 40</td>
+<td>3 个 E 核簇，簇内 50–56</td>
+</tr>
+<tr>
+<td>Alder Lake-N N355（8×E）</td>
+<td>跨簇 42</td>
+<td>簇内 54 / 53</td>
+<td><strong>同簇反而慢约 12 ns</strong></td>
+</tr>
+</tbody></table>
+<p>最后一行最反直觉：Alder Lake-N 的 8 个 E 核分成两个 4 核簇，</p>
+<p><strong>簇内的往返（54 ns）比跨簇（42 ns）慢</strong>。这不是测量缺陷，三份独立数据同向：</p>
+<ul>
+<li>同一台机器换 store 版测量，方向一致（76 ns 对 40 ns），两次独立启动也一样；</li>
+<li>开源工具 core-to-core-latency 在 i9-12900K 上测到同一形状：P↔P 35、</li>
+</ul>
+<p>P↔E 39–40、E 跨簇 44、<strong>E 同簇 50–51</strong>；</p>
+<ul>
+<li>社区用 Chips and Cheese 的微基准也得出「簇内延迟比簇外更高」，并给出机理：</li>
+</ul>
+<p>E 核簇的 L2 没有为自家 L1 准备 snoop filter，同簇交接仍然要去 L3 的 snoop</p>
+<p>filter 问路，而 L3 是 non-inclusive，一来一回比直接走 L3 的跨簇访问还绕。</p>
+<p>也就是说，这张图衡量的是<strong>"这次交接要不要借道 L3"</strong>，不是距离。P 核之间最快，</p>
+<p>是因为每个 P 核独占 L2，L2 自己就是一致性点，不用绕。</p>
+<p>因此这些数字<strong>不是判定标准</strong>，也不要拿去和别家机器的"典型值"比。它们的正确用法是</p>
+<p><strong>同一台机器自己的纵向基线</strong>：同一块板、同一版固件，这次和上次差多少。换了 CPU、</p>
+<p>换了固件、换了频率策略，绝对值就会变。</p>
+<p>28 个处理器是<strong>格子里还能写数字的上限</strong>（每格 20 像素）：</p>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/08_core_latency_matrix_28.png" alt="28 核矩阵" /></p>
+<p class="caption">图 34　28 个处理器（1512 对）：每格 20 像素，两位数仍然放得下；数字颜色按格子</p>
+<p>亮度自动切黑/白*</p>
+<p>超过 28 个处理器时格子更小，数字放不下，改成<strong>每 4 个核</strong>标一次坐标，</p>
+<p>颜色成为读数方式——一眼看出哪一片整体偏慢、哪几个核跟邻居不一样。</p>
+<p>真机上更有意思。下面这台是 Raptor Lake（8P+12E，28 个逻辑处理器）：</p>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/08_core_latency_matrix_rpl.png" alt="Raptor Lake 真机矩阵" /></p>
+<p class="caption">图 35　Raptor Lake 真机实测（数据取自机器自己的日志，按当前界面重绘）：第 15、16 号</p>
+<p>CPU 那一行/列明显偏冷，即"绿十字"；右下三块偏红的方阵是三个 E 核簇，簇内比簇外更暖*</p>
+<p>两件事在这张图上一眼可见：</p>
+<ul>
+<li><strong>绿色十字</strong>：第 15、16 号 CPU 对所有核都只有 29–35 ns，比别的 P 核快七八纳秒。</li>
+</ul>
+<p>一个核对所有核都更快，这不是拓扑而是测量——ping-pong 用的缓存行固定落在某一个</p>
+<p>L3 切片上，离它最近的核每次交接都少走一段。换个加载地址这条十字就换人，所以同一</p>
+<p>台机器两次开机的图不必长得一样。</p>
+<ul>
+<li><strong>右下三块红方阵</strong>：三个 E 核簇，簇内 50–56 ns、跨簇 44–46 ns，而同一台机器的</li>
+</ul>
+<p>P 核之间只要 38–41 ns——正是前面说的"共享 L2 的那一对最慢"。</p>
+<h3>9.3 为什么裸金属下更准</h3>
+<p>在操作系统里做同样的测量，数字会被这些东西污染：</p>
+<ul>
+<li>两个线程可能被抢占，一次往返中间插进一次调度；</li>
+<li>中断可能落在其中一个核上；</li>
+<li>调度器可能把线程迁到别的核；</li>
+<li>每核周期性到来的时钟中断是一次固定的"搭车"开销。</li>
+</ul>
+<p>裸金属阶段没有别的进程、没有调度器，时钟中断也处在固件留下的最安静状态，</p>
+<p>剩下的基本就是一致性流量本身。</p>
+<h3>9.4 操作</h3>
+<table><thead><tr>
+<th>操作</th>
+<th>效果</th>
+</tr></thead><tbody>
+<tr>
+<td><code>Enter</code>（提示框里）</td>
+<td>开始测量</td>
+</tr>
+<tr>
+<td><code>Esc</code>（提示框里）</td>
+<td>取消</td>
+</tr>
+<tr>
+<td><code>Esc</code>（矩阵页）</td>
+<td>退出，回到主界面</td>
+</tr>
+<tr>
+<td><code>R</code>（矩阵页）</td>
+<td>重新测量</td>
+</tr>
+<tr>
+<td><code>S</code>（矩阵页）</td>
+<td>把矩阵存成 <code>UBIT_LAT.BMP</code></td>
+</tr>
+</tbody></table>
+<p>测量期间会<strong>占满所有核</strong>，所以压测运行时这一项会被拒绝，并提示先停止压测。</p>
+<p>四核（12 对）约 1 秒，16 核（240 对）约 20 秒，32 核（992 对）约 1 分钟——这些</p>
+<p>是 QEMU 全模拟下的数字，真机会明显更快。期间界面</p>
+<p>不响应属于正常现象，进度行会显示"正在测量 x / y 对处理器"。</p>
+<blockquote><p><strong>最多测 32 个处理器</strong>：矩阵 32×32 封顶，更多的核只测前 32 个。这是屏幕 尺寸与"格子要能看清"之间的取舍，不是能力上限。  这条限制<strong>写在提示框里</strong>：100 核的机器上，提示框会明确写出"本机处理器： 100 个。矩阵上限 32 核，本次测前 32 个，共 992 对；其余 68 个不参与本次 测量"。报出来的数字必须和真正跑过的事情一致，这一点不能含糊。  32 核时每个格子 18 像素，放不下数值，改在<strong>每 8 个核</strong>标一次坐标 （0 / 8 / 16 / 24），颜色仍然是主要的读数方式。</p></blockquote>
+<h3>9.5 把这张图存下来</h3>
+<p>矩阵页按 <code>S</code>，固件会把当前这张卡片<strong>原样存成一张 BMP</strong>，落在 <code>UBIT.CFG</code></p>
+<p>所在的那个 FAT 卷根目录里：</p>
+<pre><code>fs0:\UBIT_LAT.BMP</code></pre>
+<p>存完底部状态行直接写出路径——<code>已保存：fs0:\UBIT_LAT.BMP（启动盘根目录）</code>，</p>
+<p>不用去翻串口日志。</p>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/09_core_latency_saved.png" alt="按 S 保存后的状态行" /></p>
+<p>*16 核视图按 <code>S</code> 之后：底部状态行给出完整路径，矩阵仍留在屏幕上供继续查看*</p>
+<p>图片是 24 位 BMP，宽度和卡片一致（1200 像素），高度随核数</p>
+<p>变：4 核 692、16 核 740。任何看图软件都能打开，也能直接贴进验收报告。</p>
+<p><strong>为什么是 BMP 不是 PNG</strong>：PNG 要一个压缩器，BMP 只要 54 字节的头加原始像素。</p>
+<p>固件里没有 zlib，也不值得为存一张图引入一个。而且 BMP 的像素顺序正好是帧缓冲</p>
+<p>的 BGRX 去掉一个字节——复制一遍就是成品，不存在"转码转错颜色"这种事。</p>
+<p><strong>为什么是一行一行写</strong>：2.5 MB 的图一次性向固件要内存会失败（池分配和页分配</p>
+<p>都试过，QEMU 上都是 <code>Out of Resources</code>），所以图片是<strong>边读帧缓冲、边写文件</strong>的，</p>
+<p>内存里始终只有 64 KB。保存因此要花一两秒，进度就是底部那行状态从空白变成路径。</p>
+<blockquote><p>保存的是<strong>按下 S 那一刻屏幕上真实显示的画面</strong>，包括当时这一场的数值和色标。 它不是重新画的一张图，所以你在图上看到的，就是操作员当时看到的东西。</p></blockquote>
+<hr />
+<h2>10. 报告与判定</h2>
+<h3>10.1 四种判定</h3>
+<table><thead><tr>
+<th>判定</th>
+<th>含义</th>
+</tr></thead><tbody>
+<tr>
+<td><code>PASS</code></td>
+<td>全部模块无错误，无降级，运行完整</td>
+</tr>
+<tr>
+<td><code>DEGRADED</code></td>
+<td>无测试错误，但有能力缺失（协议不可用、温度读不到等）</td>
+</tr>
+<tr>
+<td><code>FAIL</code></td>
+<td>至少发现一个真实错误</td>
+</tr>
+<tr>
+<td><code>INCOMPLETE</code></td>
+<td>被中途停止 / 轮次未跑完</td>
+</tr>
+</tbody></table>
+<p><strong><code>DEGRADED</code> 和 <code>INCOMPLETE</code> 永远不会被报成 <code>PASS</code>。</strong></p>
+<h3>10.2 文本报告</h3>
+<p><code>UBIT_RPT.TXT</code> 是纯 <code>key=value</code> 行，重复键表示列表：</p>
+<pre><code>timestamp=2026-11-11T14:00:25Z
+sn=unavailable
+profile=burnin-60s-smp4
+version=0.1.0+321.2026-11-14 14:28:55
+elapsed_seconds=60
+completed=yes
+configured_loops=1
+completed_loops=1
+total_elapsed_seconds=60
+module_count=10
+module=CPU_压力测试
+module_errors=CPU_压力测试:0
+...
+errors=1
+downgrade_count=8
+downgrade=sn-placeholder
+verdict=FAIL</code></pre>
+<h3>10.3 HTML 报告</h3>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/33_html_report.png" alt="HTML 报告" /></p>
+<p class="caption">图 31　浏览器打开的 <code>UBIT_RPT.HTM</code>：判定卡、机器身份与运行、压力测试项表、降级原因</p>
+<blockquote><p>图中判定为 <code>RUNNING - the test has not finished yet.</code>，因为这份报告是 <strong>运行中</strong>通过「文件 → HTML 报告」导出的。工具如实标注未完成，不会把 一份半截报告伪装成通过——这正是判定诚实性的一个例子。</p></blockquote>
+<h3>10.4 可打印证书</h3>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/34_certificate.png" alt="测试证书" /></p>
+<p class="caption">图 32　<code>UBITCERT.TXT</code> 的排版预览（纯文本，可直接打印或随机器归档）</p>
+<h3>10.5 冷热启动对比</h3>
+<p>工具把上一轮摘要写入 NVRAM 变量。下次启动时读入并作为 <code>cold_*</code> 字段写进</p>
+<p>报告，可对比两轮之间的错误数与判定变化。NVRAM 不可用时记为降级，不假装</p>
+<p>有对比能力。真实样本可在 <code>artifacts/</code> 目录查看。</p>
+<hr />
+<h2>11. 批量结果归集</h2>
+<p>产线跑完一批机器后，把每台机器 U 盘里的 <code>UBIT_RPT.TXT</code> 拷到同一个目录</p>
+<p>（文件名带序列号），执行：</p>
+<pre><code>py -3 tools/Aggregate-Reports.py -i reports/ -o out/
+py -3 tools/Aggregate-Reports.py -i reports/ --fail-on-bad</code></pre>
+<p>产出 <code>UBIT_FLEET.CSV</code>（每台一行）和 <code>UBIT_FLEET.HTML</code>（纯静态看板，</p>
+<p>无脚本、无 CDN，可离线归档打印）。</p>
+<p><img src="D:/Work/Code/uBurnInTest/docs/manual/images/32_fleet_dashboard.png" alt="批量看板" /></p>
+<p class="caption">图 33　批次看板：汇总卡片 + 逐机明细 + 降级原因</p>
+<p><strong>这里没有 Web 控制台，是刻意的</strong>：pre-OS 设备没有网络栈、没有 OS，产线</p>
+<p>真实动作就是"把 U 盘报告拷到一个目录"，工具按这个动作设计。</p>
+<p><strong>批次判定规则</strong>：</p>
+<ul>
+<li>任意一台 <code>FAIL / DEGRADED / INCOMPLETE / UNKNOWN</code> → 批次 <code>NOT CLEAN</code>。</li>
+<li><strong>说谎的报告会被识破</strong>：<code>completed=no</code> 或 <code>completed_loops &lt; configured_loops</code></li>
+</ul>
+<p>却写 <code>verdict=PASS</code> 的，强制改判 <code>INCOMPLETE</code> 并在备注里写明。</p>
+<ul>
+<li>字段缺失显示 <code>unavailable</code>，<strong>不填 0</strong>——"零错误"和"不知道"是两件事。</li>
+<li>空目录是错误，不是"0 台全过"。</li>
+<li>序列号重复全部保留并标记；<code>sn=unavailable</code> 不会把整批机器合成一行。</li>
+<li><code>--fail-on-bad</code> 让批次不合格时返回退出码 2，可直接当 CI / 产线闸门。</li>
+</ul>
+<p><code>tools/Assert-Fleet.ps1</code> 用五个合成用例（混合批次、全通过、CI 闸门、空目录、</p>
+<p>缺字段）验证上述规则。</p>
+<hr />
+<h2>12. 无人值守配置与故障注入</h2>
+<h3>11.1 正常启动：始终待命</h3>
+<p>开机<strong>不会自动开始压力测试</strong>。要无人值守上电即跑，必须在 FAT 卷根目录</p>
+<p>单独放一个 <code>UBIT_AUTO.TXT</code>（内容为一个字节 <code>1</code>）。这是<strong>唯一</strong>开关，</p>
+<p>配置文件里没有任何字段可以打开它。</p>
+<p>把自动启动与用户设置分开是一个刻意的安全设计：过去自动化验证会把</p>
+<p><code>autostart=1</code> 写进配置文件并留在盘上，结果操作员下一次人工开机时，</p>
+<p>机器在没人按下「开始」的情况下直接跑完整轮。现在 <code>autostart=</code> 在</p>
+<p>旧配置里被直接忽略，验证脚本只在当次生成的磁盘镜像里放入</p>
+<p><code>UBIT_AUTO.TXT</code>，随后立即从宿主 staging 目录删除。</p>
+<h3>11.2 <code>UBIT.CFG</code>（JSON 设置文件）</h3>
+<p>「压力测试 → 测试项设置 → 保存并应用」写出下面的 <code>.cfg</code> JSON 文档；</p>
+<p>下次启动优先读它：</p>
+<pre><code>{
+  &quot;version&quot;: 1,
+  &quot;durationSeconds&quot;: 14400,
+  &quot;duty&quot;: 100,
+  &quot;loops&quot;: 1,
+  &quot;enabled&quot;: [1,1,1,1,1,1,1,1,1,1],
+  &quot;modules&quot;: [&quot;cpu&quot;,&quot;memory&quot;,&quot;storage&quot;,&quot;gop&quot;,&quot;cache&quot;,&quot;simd&quot;,&quot;randmem&quot;,&quot;seek&quot;,&quot;pcie&quot;,&quot;smp&quot;]
+}</code></pre>
+<table><thead><tr>
+<th>字段</th>
+<th>含义</th>
+</tr></thead><tbody>
+<tr>
+<td><code>version</code></td>
+<td>文档格式版本，当前为 1</td>
+</tr>
+<tr>
+<td><code>durationSeconds</code></td>
+<td>每轮秒数，10 ~ 86400；默认 14400（4 小时）</td>
+</tr>
+<tr>
+<td><code>duty</code></td>
+<td>负载占空比 25 / 50 / 75 / 100</td>
+</tr>
+<tr>
+<td><code>loops</code></td>
+<td>轮数 1..24（默认 1）</td>
+</tr>
+<tr>
+<td><code>enabled</code></td>
+<td>十个模块开关，顺序与 <code>modules</code> 一一对应</td>
+</tr>
+<tr>
+<td><code>modules</code></td>
+<td>稳定 id，便于手工编辑与外部工具解析</td>
+</tr>
+</tbody></table>
+<h3>11.3 旧版 <code>UBIT_CFG.TXT</code>（兼容回退）</h3>
+<p>仅当 <code>UBIT.CFG</code> 不存在时读取，供既有产线镜像继续使用：</p>
+<pre><code>duration=60
+loops=3
+duty=100
+mod0=1
+mod1=1
+...
+mod9=1</code></pre>
+<table><thead><tr>
+<th>键</th>
+<th>含义</th>
+</tr></thead><tbody>
+<tr>
+<td><code>duration</code></td>
+<td>每轮秒数</td>
+</tr>
+<tr>
+<td><code>loops</code></td>
+<td>轮数 1..24（默认 1）</td>
+</tr>
+<tr>
+<td><code>duty</code></td>
+<td>负载占空比</td>
+</tr>
+<tr>
+<td><code>mod0..mod9</code></td>
+<td>十个模块开关</td>
+</tr>
+<tr>
+<td><code>autostart</code></td>
+<td><strong>已废弃，任何值都被忽略</strong></td>
+</tr>
+</tbody></table>
+<p><strong>每轮都是真跑</strong>：引擎被真正重启 N 次，串口可见 N 行 <code>run started</code>。</p>
+<p><strong>跨轮错误会归档</strong>：<code>EngineStart()</code> 会清空错误计数，所以每轮结束时的逐模块</p>
+<p>错误数必须先归档再折回——否则第 1 轮发现的内存故障会在第 2 轮开始时被</p>
+<p>抹掉，坏机器会被报成好的。</p>
+<p>报告整个运行<strong>只写一次</strong>，如实写 <code>configured_loops</code>、<code>completed_loops</code>、</p>
+<p><code>total_elapsed_seconds</code>；中途停止时 <code>completed_loops &lt; configured_loops</code> 且</p>
+<p>判定 <code>INCOMPLETE</code>。</p>
+<blockquote><p>配置文件超过缓冲区会被静默截断是曾经修掉的一个坑：现在读满会返回 <code>EFI_BUFFER_TOO_SMALL</code> 并告警，操作员要的参数绝不会悄悄变成默认值。</p></blockquote>
+<h3>11.4 故障注入（仅验证用）</h3>
+<p>U 盘根目录放 <code>UBIT_INJ.TXT</code>，内容为下表名之一：</p>
+<table><thead><tr>
+<th>值</th>
+<th>效果</th>
+</tr></thead><tbody>
+<tr>
+<td><code>mem</code></td>
+<td>注入一个真实内存错误 → 判定应为 <code>FAIL</code></td>
+</tr>
+<tr>
+<td><code>protocol</code></td>
+<td>假装协议缺失 → 判定应为 <code>DEGRADED</code></td>
+</tr>
+<tr>
+<td><code>link</code></td>
+<td>假装 PCIe 链路降级</td>
+</tr>
+</tbody></table>
+<p>生产环境<strong>不要</strong>放这个文件。</p>
+<hr />
+<h2>13. 判定口径与诚实性规则</h2>
+<p>这一节是这个产品最重要的部分。</p>
+<ol>
+<li><strong>跳过即降级</strong>。任何能力缺失都进 <code>degraded.reason</code>，判定 <code>DEGRADED</code>。</li>
+</ol>
+<p>能力缺失绝不是通过。</p>
+<ol>
+<li><strong>未完成绝不算通过</strong>。中途停止、轮次没跑完、报告说谎，一律 <code>INCOMPLETE</code>。</li>
+<li><strong>不猜、不填 0</strong>。读不到的写 <code>unavailable</code>：温度不可用 ≠ 温度 0 度；</li>
+</ol>
+<p>没有 SPD ≠ 0 个内存槽。</p>
+<ol>
+<li><strong>错误归属到模块</strong>。报告逐模块写 <code>module_errors=名称:数量</code>，不会只给</li>
+</ol>
+<p>一个总数让人猜。</p>
+<ol>
+<li><strong>证据可机器校验</strong>。所有关键行为都在串口留 ASCII 行（<code>id=</code> 短标识、</li>
+</ol>
+<p><code>iter</code>、<code>err</code>），25 个断言脚本自动核对。</p>
+<ol>
+<li><strong>动态行为不用截图断言</strong>。QEMU 的 <code>screendump</code> 不保证反映运行中的</li>
+</ol>
+<p>Blt 写入；进度、心跳、错误、停机一律用<strong>串口断言</strong>验证，截图只作界面</p>
+<p>结构的静态证据。</p>
+<ol>
+<li><strong>输出有预算</strong>。串口日志 FIFO 满时 <code>DEBUG()</code> 会自旋，日志一多固件会被</li>
+</ol>
+<p>自己的输出堵死、读不到键盘。聊天性输出计入 64KB 软限 / 128KB 硬限，</p>
+<p><strong>决定判定的输出永不抑制</strong>。</p>
+<hr />
+<h2>14. 部署与产物清单</h2>
+<h3>13.1 四层架构</h3>
+<pre><code>Ui         主窗口、菜单、对话框、进度条、色卡
+Verdict    判定、报告、NVRAM 冷热摘要、错误归档
+Engine     模块契约、时间片调度、逐片结果
+Platform   SMBIOS / ACPI / PCIe / SPD / SMART / ECC / MSR / GOP</code></pre>
+<p>LVGL 上游源码保持逐字节一致，只改 UEFI 移植层；本项目对移植层的每一处</p>
+<p>改动都记在 <code>LvglPkg/UPSTREAM_CHANGES.md</code>，便于回推上游。</p>
+<h3>13.2 关键脚本</h3>
+<table><thead><tr>
+<th>脚本</th>
+<th>用途</th>
+</tr></thead><tbody>
+<tr>
+<td><code>tools/Build-UefiApp.ps1</code></td>
+<td>真实 EDK2 构建（含 <code>VSLANG=1033</code>）</td>
+</tr>
+<tr>
+<td><code>tools/Run-QemuVerify.ps1</code></td>
+<td>headless QEMU 验证 + 键鼠注入 + 抓帧</td>
+</tr>
+<tr>
+<td><code>tools/Run-FullValidation.ps1</code></td>
+<td>完整回归（1/2/2b/2c/2d/3/4/5/6/7，含 AP 公平性、负载强度、待命滚动与 JSON 配置）</td>
+</tr>
+<tr>
+<td><code>tools/Assert-ApFairness.ps1</code></td>
+<td>三个多核模块是否<strong>公平共享</strong>了 AP</td>
+</tr>
+<tr>
+<td><code>tools/Assert-Utilization.ps1</code></td>
+<td>整机占用率是否达到验收线（中位 ≥ 60%）</td>
+</tr>
+<tr>
+<td><code>tools/Assert-BootIdleScroll.ps1</code></td>
+<td>待命启动、滚轮不回跳、4 小时 <code>hh:mm:ss</code></td>
+</tr>
+<tr>
+<td><code>tools/Assert-ConfigJson.ps1</code></td>
+<td>从 FAT 镜像提取 <code>UBIT.CFG</code>、解析 JSON 并验证下一轮读回</td>
+</tr>
+<tr>
+<td><code>tools/Capture-Manual.ps1</code></td>
+<td><strong>重建全部 34 张手册图片</strong>（含 Word/HTML 双格式）</td>
+</tr>
+<tr>
+<td><code>tools/Assert-*.ps1</code></td>
+<td>24 个行为断言</td>
+</tr>
+<tr>
+<td><code>tools/Aggregate-Reports.py</code></td>
+<td>批量报表归集</td>
+</tr>
+<tr>
+<td><code>tools/Ppm-ToPng.py</code></td>
+<td>抓帧转 PNG</td>
+</tr>
+<tr>
+<td><code>tools/FatImageExtract.py</code></td>
+<td>从 FAT 镜像提取报告</td>
+</tr>
+</tbody></table>
+<h3>13.3 三个多核模块如何共享 AP</h3>
+<p><code>CPU 压力测试</code>、<code>浮点 SIMD 压力</code>、<code>多核同步压力</code> 都要用 <code>StartupAllAPs</code></p>
+<p>把负载派发到 AP 上，而 <strong>一台机器同一时刻只能有一个 <code>StartupAllAPs</code></strong>。</p>
+<p>这件事的性质属于<strong>机器</strong>而不属于模块，所以仲裁放在引擎里：</p>
+<ul>
+<li><strong>直通</strong>：<code>StartupAllAPs</code> 直接交给 MP Services。它返回 <code>EFI_NOT_READY</code></li>
+</ul>
+<p>就表示 AP 还在跑上一个过程——这是<strong>机器自己的陈述</strong>，不会过期，也无法被</p>
+<p>更好的猜测击败。在它之上再叠一层协调只会增加等待。引擎<strong>不再</strong>预留、</p>
+<p>不排队、不持有租约。</p>
+<ul>
+<li><strong>严格轮转</strong>：AP 在三个多核模块之间<strong>轮流</strong>发放，不受「谁问得勤」影响。</li>
+</ul>
+<p>引擎在 10 个模块间轮转，三个多核模块的请求频率相差很大，任何「先到先得」</p>
+<p>或「谁等得久」规则都会让问得最少的那个<strong>永远拿不到</strong>。</p>
+<p>实测：没有轮转时 SIMD 拿走 210 次派发中的 174 次，CPU 只有 29 次、SMP 只有</p>
+<p>7 次——<strong>占用率读数是 100%，但两个多核路径已经停工</strong>，覆盖率是假的。</p>
+<p>加了轮转后是 93 / 92 / 92。</p>
+<ul>
+<li><strong>轮次超时</strong>：任何一个 AP 掉队，模块在 5 秒后<strong>放弃该轮</strong>，不会把机器攥住。</li>
+</ul>
+<p>被放弃的轮次记为<strong>降级</strong>而不是错误——没证明任何东西坏了，只是能力缺失。</p>
+<ul>
+<li><strong>可见性</strong>：运行中每 10 秒打印仲裁状态，运行结束打印每个模块的</li>
+</ul>
+<p><code>grants</code> 与 <code>wait_ms</code>。<strong>一个被饿死的模块必须自己喊出来</strong>，不能安静地</p>
+<p>什么都不做。</p>
+<blockquote><p>这一节是补上的。之前的仲裁把 <code>EFI_NOT_READY</code> 当「正常排队」静默吞掉， 结果 <code>多核同步压力</code> 整场 0 轮、<strong>日志里一个错误都没有</strong>，而回归照样通过。 现在 <code>tools/Assert-ApFairness.ps1</code> 会检查三个模块拿到的份额是否可比 （最少的一份不低于最多的四分之一），份额悬殊即判定失败。</p></blockquote>
+<h3>13.3.1 负载强度是验收指标</h3>
+<p><code>CPU 占用</code> 卡片读的是<strong>全机利用率</strong>，正常长跑是 <strong>80%~100%</strong>；低于 60%</p>
+<p>说明机器没有被真正压满，是缺陷不是正常值。回归里的</p>
+<p><code>tools/Assert-Utilization.ps1</code> 会检查整场运行的中位占用率。</p>
+<p>三条实现细节是踩过坑才知道的，<strong>不要改回去</strong>：</p>
+<ul>
+<li><strong>AP 必须实时上报忙时</strong>，不能等整轮跑完再一次性上报。一次性上报会把好几秒</li>
+</ul>
+<p>的活压进一个 1 秒统计窗口，读数在 12% 和 100% 之间震荡，而机器其实是满载的。</p>
+<ul>
+<li>统计窗口是<strong>滑动窗口</strong>（4 个 1 秒桶求和），不是翻滚窗口。</li>
+<li>AP 的忙时按<strong>处理器分槽</strong>累计（本工程链接的库集里没有可移植的 64 位原子加，</li>
+</ul>
+<p>共享计数器就无从谈起）。</p>
+<p>另外，<strong>每个模块的切片必须跑满整个配额</strong>。旧实现按「固定迭代数/字节数」</p>
+<p>决定工作量，模块提前干完就把剩余时间浪费在空转上——整机利用率因此只有 12%。</p>
+<p>现在所有模块都按 TSC 截止时间驱动，切片跑到截止才返回。</p>
+<h3>13.4 构建注意</h3>
+<p>EDK2 增量构建<strong>必须设 <code>VSLANG=1033</code></strong>：BaseTools 靠匹配 <code>cl.exe /showIncludes</code></p>
+<p>的英文前缀 <code>Note: including file:</code> 提取头文件依赖；中文系统输出本地化前缀会让</p>
+<p><code>deps.txt</code> 全为 0 字节，改了 <code>Version.h</code> 后普通 build 退出码仍是 0，却静默产出</p>
+<p>陈旧的 <code>.efi</code>。构建脚本已设置，无需再 clean。</p>
+<hr />
+<h2>15. 故障排查</h2>
+<table><thead><tr>
+<th>现象</th>
+<th>先看哪里</th>
+</tr></thead><tbody>
+<tr>
+<td>按键完全没反应，串口无 <code>key</code> 行</td>
+<td>① QMP 端口是否被没退出的 QEMU 占用；② 日志是否过大（输出预算）；③ 按键脚本是否被排到运行结束之后</td>
+</tr>
+<tr>
+<td>界面显示的版本号不是刚构建的</td>
+<td><code>VSLANG</code> 没设，产出了陈旧 <code>.efi</code>；对比 <code>expected_version.txt</code></td>
+</tr>
+<tr>
+<td>配置文件没生效</td>
+<td>查看串口是否报 <code>EFI_BUFFER_TOO_SMALL</code>；确认文件名是 8.3</td>
+</tr>
+<tr>
+<td>报告显示某模块 0 错误但机器有问题</td>
+<td>查 <code>degraded.reason</code>——能力缺失与"测过没问题"是两回事</td>
+</tr>
+<tr>
+<td><code>screendump</code> 各帧字节完全相同</td>
+<td>这是 QEMU 的限制，不代表界面没动；用串口断言判断动态行为</td>
+</tr>
+<tr>
+<td>warm 轮卡住、没有 <code>run finalised</code></td>
+<td>检查是否有模块单片工作量过大（帧缓冲每像素一次 PCIe 事务）</td>
+</tr>
+<tr>
+<td>设置对话框按钮被挤出</td>
+<td>高度由行数派生，若你改了行数请同步 <code>UI_SETTINGS_ROWS</code></td>
+</tr>
+</tbody></table>
+<hr />
+<h2>16. 附录：已知边界</h2>
+<p><strong>QEMU 是验证环境，不是机器</strong>。下列能力在 QEMU 上不存在，工具如实报</p>
+<p><code>unavailable</code> 并记为降级：</p>
+<table><thead><tr>
+<th>能力</th>
+<th>QEMU 上的原因</th>
+</tr></thead><tbody>
+<tr>
+<td>DDR4/DDR5 SPD over SMBus</td>
+<td>无 SMBus 主机控制器</td>
+</tr>
+<tr>
+<td>NVMe SMART 健康日志</td>
+<td>虚拟 NVMe 不实现日志页</td>
+</tr>
+<tr>
+<td>CPU / ACPI 温度</td>
+<td>无 thermal MSR、无温度区</td>
+</tr>
+<tr>
+<td>PCIe 链路重训练压力</td>
+<td><strong>QEMU 不实现 PCIe capability</strong>（i440fx 与 q35 都只有 legacy PCI）</td>
+</tr>
+</tbody></table>
+<p><strong>因此需要上机验证的两项</strong>：</p>
+<ol>
+<li><strong>CPU 温度</strong>：实现已按 Intel SDM 逐位修正 <code>IA32_THERM_STATUS</code> 的位定义与</li>
+</ol>
+<p>TCC 来源，但 QEMU 无 thermal MSR，真机读数未验证。</p>
+<ol>
+<li><strong>PCIe 链路重训练压力</strong>：已作为第 9 个压力模块<strong>落地实现</strong>，按 PCI</li>
+</ol>
+<p>Express Base Spec 5.0 设计（Link Control bit5 触发、Link Status bit11</p>
+<p>判断，每次校验链路回到初始协商的宽度与速率）。QEMU 没有 PCIe</p>
+<p>capability，<code>Probe()</code> 返回 <code>EFI_UNSUPPORTED</code>，引擎如实记</p>
+<p><code>module-pcie-unavailable</code> 降级、基线写 <code>pci_stress=unavailable</code>，绝不</p>
+<p>计为通过；因此链路重训练的真机行为仍需在带 PCIe 根端口的实体机上验证。</p>
+<p>手册里所有 QEMU 截图都来自真实固件运行，<strong>这两项没有被伪装成测过</strong>。</p>
+<hr />
+<p>*uBurnInTest · Mike Wu · 截图采集于 2026-11-14*</p></body></html>

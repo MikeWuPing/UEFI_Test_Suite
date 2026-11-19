@@ -46,9 +46,11 @@ uBurnInTest 跑在 **UEFI Shell** 里，在操作系统启动之前工作：把�
 | 产物 | 文本报告、HTML 报告、可打印证书、基线快照、多机批量汇总 CSV/HTML |
 | 配置 | 图形化设置对话框 + `UBIT_CFG.TXT` 无人值守与多轮循环 |
 
-![核间延迟矩阵](docs/manual/images/08_core_latency_matrix_rpl.png)
+![ARL 真机：8 个 E 核的核间延迟矩阵](docs/manual/images/08_core_latency_arl.png)
 
-*核间延迟：28 核真机数据，格内直接读单程纳秒数。这张图不是"距离图"——共享 L2 的核反而更慢，详见手册*
+![RPL 真机：28 个逻辑处理器的核间延迟矩阵](docs/manual/images/08_core_latency_rpl_real.png)
+
+*两张都是真机截图，格内直接写单程纳秒数。ARL 的两个 4 核簇内是 72 / 77 ns、跨簇只有 38 ns；RPL 的 SMT 兄弟 4 ns、E 核簇 51–53 ns，第 13–16 号 CPU 的"绿十字"是测量效应。这张图不是"距离图"——共享 L2 的核反而更慢，详见手册*
 
 ## 平台与运行要求
 
@@ -122,9 +124,11 @@ uBurnInTest runs in the **UEFI Shell**, before any operating system boots. Hand 
 | Outputs | Text report, HTML report, printable certificate, baseline snapshot, multi-machine CSV/HTML summary |
 | Configuration | Graphical settings dialog plus `UBIT_CFG.TXT` for unattended and multi-loop runs |
 
-![Core-to-core latency matrix](docs/manual/images/08_core_latency_matrix_rpl.png)
+![ARL real machine: 8 E-cores](docs/manual/images/08_core_latency_arl.png)
 
-*28-core real-machine matrix, one-way nanoseconds in every cell. It is not a "distance map" — cores sharing an L2 are slower; see the manual.*
+![RPL real machine: 28 logical processors](docs/manual/images/08_core_latency_rpl_real.png)
+
+*Both are real-machine captures with one-way nanoseconds in every cell. On the ARL the two four-core clusters measure 72 / 77 ns internally and only 38 ns across; on the RPL SMT siblings are 4 ns, E-core clusters 51–53 ns, and the "green cross" at CPUs 13–16 is a measurement effect. This is not a distance map — cores sharing an L2 are slower; see the manual.*
 
 ## Requirements
 
